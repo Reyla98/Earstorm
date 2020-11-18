@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SaferStreets</title>
+    <link rel="stylesheet" href="static.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="head">
+      
+    </div>
+    <div class="container">
+      <h4>Browse through genres:</h4>
+      <form action=filterGenre action=get>
+        <input type="checkbox" id="genre_alternative" name="genre_alternative">
+        <label for="genre_alternative"> Alternative</label>
+        <input type="checkbox" id="genre_country" name="genre_country">
+        <label for="genre_country"> Country</label>
+        <input type="checkbox" id="genre_folk" name="genre_folk">
+        <label for="genre_folk"> Folk</label>
+        <input type="checkbox" id="genre_house" name="genre_house">
+        <label for="genre_house"> House</label>
+        <input type="checkbox" id="genre_latino" name="genre_latino">
+        <label for="genre_latino"> Latino</label>
+        <input type="checkbox" id="genre_metal" name="genre_metal">
+        <label for="genre_metal"> Metal</label>
+        <input type="checkbox" id="genre_pop" name="genre_pop">
+        <label for="genre_pop"> Pop</label>
+        <input type="checkbox" id="genre_punk" name="genre_punk">
+        <label for="genre_punk"> Punk</label>
+        <input type="checkbox" id="genre_rock" name="genre_rock">
+        <label for="genre_rock"> Rock</label>
+        <input type="checkbox" id="genre_techno" name="genre_techno">
+        <label for="genre_techno"> Techno</label>
+        <input type="checkbox" id="genre_other" name="genre_other">
+        <label for="genre_techno"> Other</label><br>
+        <button>Show all</button><br>
+      </form>
+
+      <table align="center" class="playlist_table">
+        <tr align="center">
+          <th width="5%"></th>
+          <th width="20%">Title</th>
+          <th width="24%">Description</th>
+          <th width="15%">Creator</th>
+          <th width="13%">Created on</th>
+          <th width="13%">Last modified on</th>
+        </tr>
+
+        {{#playlist_list}}
+        <tr>
+          <td>{{picture}}</td><td>{{title}}</td><td>{{description}}</td><td>{{creator}}</td><td>{{creation_date}}</td><td>{{modification_date}}</td>
+        </tr>
+        {{/playlist_list}}
+
+      </table>
+      
+      <p align="center" class="error_message">{{noMatchErrorMessage}}</p>
+    </div>
+  </body>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</html>

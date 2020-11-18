@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SaferStreets</title>
+    <link rel="stylesheet" href="static.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="head">
+      
+    </div>
+    <div class="container">
+      <img src="/home/laurane/Progra/EarStorm/EarStorm/img/th.jpeg" alt="playlist image" id="playlist_image" width="160px" height="160px">
+      <iframe id="song_player" name="song_player" width="320px" height="250px" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <h4>{{playlist_title}}</h4>
+      <p>{{playlist_creator}}</p>
+      <p>{{playlist_description}}</p>
+      <p>{{playlist_genres}}</p>
+      <table align="center" class="playlist_table">
+        <tr align="center">
+          <th width="5%"></th>
+          <th width="82%">Title</th>
+          <th width="13%">Added on</th>
+        </tr>
+        {{#song_list}}
+        <tr>
+          <td>
+            <button id="play_button">
+              <a href="https://youtube.com/embed/kXYiU_JCYtU" target="song_player">
+                <img src="../img/play-button.png" alt="play button" width="16px" height="16px" id="play_button">
+              </a>
+            </button>
+          </td>
+          <td>{{title}}</td>
+          <td>{{modification_date}}</td>
+        </tr>
+        {{/song_list}}
+      </table>
+  </body>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</html>
