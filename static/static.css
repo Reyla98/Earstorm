@@ -35,7 +35,6 @@
 
 .head .navbar .nav-link:hover {
   color:orange;
-
 }
 
 .navbar-toggler-icon {
@@ -48,6 +47,10 @@
 
 
 /* tables */
+.container table {
+  width:90%;
+}
+
 .playlist_table {
   border-collapse: collapse;
   border-color: black;
@@ -56,6 +59,16 @@
 
 .playlist_table th, .playlist_table td {
   border:1px solid black;
+}
+
+
+/* froms */
+fieldset {
+  border: 5px solid blue;  /* !!!!!!!!!!!! marche pas !!!!!!!!!!! */
+}
+
+.form-inline{
+  margin-left: 0px;
 }
 
 
@@ -81,6 +94,22 @@ h4 {
   display: flex;
 }
 
+label{
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+label sm{
+  font-size: 70%;
+}
+
+.container p {
+  margin-right:10%;       /* might be a conflict with Laurane's pages */
+}
+
+
+/* ids */
+
 #playlist_image {
   float: left;
   padding-right: 10px;
@@ -95,4 +124,24 @@ h4 {
   float:right;
   padding-bottom: 10px;
   padding-left: 10px;
+}
+
+#PL_add_genre, #PL_descr {
+    height: 100px;
+    width: 100%;
+}
+
+#PL_name {
+    height: 30px;
+    width: 100%;
+}
+
+#PL_titles {
+    height:200px;
+    width:100%;
+}
+
+#upload_img label {
+  background-color: white;
+  color: black;
 }
