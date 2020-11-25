@@ -18,7 +18,11 @@ MongoClient.connect('mongodb://localhost:27017', function(err, db){
     dbo = db.db('earstorm');
 
     app.get('/homepage', function(req,res){
-        res.render('homepage.html');
+		if(req.session.username){
+			res.render('homepage.html', {username : req.session.username});
+		} else {
+			res.render('homepage.html', {login : "Log in"})
+		}
     });
 
     app.post('/login', function(req,res){
