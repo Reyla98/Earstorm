@@ -2,20 +2,34 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SaferStreets</title>
+    <title>{{username}}</title>
     <link rel="stylesheet" href="static.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
   </head>
   <body>
-    <div class="head">
-      
-    </div>
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <a class="navbar-brand" href="/homepage">EarStorm <img src="../img/logo.png" width="50" height="50" alt="logo"></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active" >
+          <a class="nav-link link">{{username}}</a>
+          </li>
+        </ul>
+        <form action="searchplaylist" class="form-inline my-2 my-lg-0" method="get">
+          <input class="form-control mr-sm-2" type="search" name="search_words" placeholder="Search a playlist" aria-label="Search">
+          <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
     <div class="container">
       <h4>{{username}}</h4>
-      <form action=addPlaylist action="/new_playlist.html">
-        <button>Create new Playlist</button><br>
-      </form>
       <h4>My Playlists</h4>
+      <form action=addPlaylist action="/new_playlist.html">
+        <button class="btn btn-primary">Create new Playlist</button><br>
+      </form>
       <table align="center" class="playlist_table">
         <tr align="center">
           <th width="5%"></th>
@@ -35,7 +49,7 @@
           <td>{{modification_date}}</td>
           <td>
             <form>
-              <button class="text_button">Modify</button>
+              <button class="btn btn-link">Modify</button>
             </form>
           </td>
         </tr>
@@ -43,7 +57,7 @@
 
       </table>
       <br>
-      <button class="centered">Log out</button>
+      <button class="btn btn-primary mx-auto d-block">Log out</button>
     </div>
   </body>
 

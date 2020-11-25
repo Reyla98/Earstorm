@@ -2,14 +2,28 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>SaferStreets</title>
+    <title>{{playlist_title}}</title>
     <link rel="stylesheet" href="static.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
   </head>
   <body>
-    <div class="head">
-      
-    </div>
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <a class="navbar-brand" href="/homepage">EarStorm <img src="../img/logo.png" width="50" height="50" alt="logo"></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active" >
+          <a class="nav-link link">{{username}}</a>
+          </li>
+        </ul>
+        <form action="searchplaylist" class="form-inline my-2 my-lg-0" method="get">
+          <input class="form-control mr-sm-2" type="search" name="search_words" placeholder="Search a playlist" aria-label="Search">
+          <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
     <div class="container">
       <img src={{playlist_image}} alt="playlist image" id="playlist_image" width="160px" height="160px">
       <iframe id="song_player" name="song_player" width="320px" height="250px" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -26,7 +40,7 @@
         {{#song_list}}
         <tr>
           <td>
-            <button id="play_button">
+            <button class="btn btn-default mx-auto d-block">
               <a href={{song_URL}} target="song_player">
                 <img src="../img/play-button.png" alt="play button" width="16px" height="16px" id="play_button">
               </a>
