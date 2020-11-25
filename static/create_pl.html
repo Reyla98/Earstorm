@@ -26,57 +26,57 @@
     </nav>
     <div class="container">
       <h4>Create a playlist:</h4>
-      <form action="createPL" method="post">
-        <label for="PL_name">Playlist name:<br><sm>Please use commas to separate the different links.</sm></label><br>
-          <textarea id="PL_name" name="PL_name" required></textarea><br><br>
-        <label for="PL_titles">Titles:</label><br>
-          <textarea id="PL_titles" name="PL_titles" required></textarea><br><br>
-        <label for="PL_genres">Genres:</label>
+      <form action="createPlaylist" method="post">
+        <label for="playlist_name">Playlist name:<br><sm>Please use commas to separate the different links.</sm></label><br>
+          <textarea id="playlist_name" name="playlist_name" required></textarea><br><br>
+        <label for="playlist_titles">Titles:</label><br>
+          <textarea id="playlist_titles" name="playlist_titles" required></textarea><br><br>
+        <label for="playlist_genres">Genres:</label>
         <fieldset>
-          <input type="checkbox" id="alternative" name="PL_genres" value="alternative">
+          <input type="checkbox" id="alternative" name="playlist_genres" value="alternative">
           <label for="alternative">Alternative </label>
 
-          <input type="checkbox" id="country" name="PL_genres" value="country">
+          <input type="checkbox" id="country" name="playlist_genres" value="country">
           <label for="country">Country </label>
 
-          <input type="checkbox" id="folk" name="PL_genres" value="folk">
+          <input type="checkbox" id="folk" name="playlist_genres" value="folk">
           <label for="folk">Folk </label>
 
-          <input type="checkbox" id="house" name="PL_genres" value="house">
+          <input type="checkbox" id="house" name="playlist_genres" value="house">
           <label for="house">House </label>
 
-          <input type="checkbox" id="latino" name="PL_genres" value="latino">
+          <input type="checkbox" id="latino" name="playlist_genres" value="latino">
           <label for="latino">Latino </label>
 
-          <input type="checkbox" id="metal" name="PL_genres" value="metal">
+          <input type="checkbox" id="metal" name="playlist_genres" value="metal">
           <label for="metal">Metal </label>
 
-          <input type="checkbox" id="pop" name="PL_genres" value="pop">
+          <input type="checkbox" id="pop" name="playlist_genres" value="pop">
           <label for="pop">Pop </label>
 
-          <input type="checkbox" id="punk" name="PL_genres" value="punk">
+          <input type="checkbox" id="punk" name="playlist_genres" value="punk">
           <label for="punk">Punk </label>
 
-          <input type="checkbox" id="rock" name="PL_genres" value="rock">
+          <input type="checkbox" id="rock" name="playlist_genres" value="rock">
           <label for="rock">Rock </label>
 
-          <input type="checkbox" id="techno" name="PL_genres" value="techno">
+          <input type="checkbox" id="techno" name="playlist_genres" value="techno">
           <label for="techno">Techno </label>
         </fieldset><br>
-        <label for="PL_add_genre">Additional genres:
+        <label for="playlist_add_genre">Additional genres:
           <br><sm>Please use commas to separate genres if adding multiple.
           <br> Genres proposed by users are subject to moderators' approval to avoid redundant genre names.
           </sm></label><br>
-          <textarea id="PL_add_genre" name="PL_add_genre"></textarea><br><br>
-        <label for="PL_descr">Description: <sm>(optional)</sm></label><br>
-          <textarea id="PL_descr" name="PL_descr"></textarea><br><br>
-        <label for="PL_image">Image: <sm>(optional)</sm></label>
+          <textarea id="playlist_add_genre" name="playlist_add_genre"></textarea><br><br>
+        <label for="playlist_descr">Description: <sm>(optional)</sm></label><br>
+          <textarea id="playlist_descr" name="playlist_descr"></textarea><br><br>
+        <label for="playlist_image">Image: <sm>(optional)</sm></label>
           <div class="custom-file">
             <input type="file" class="custom-file-input" id="customFile">
             <label class="custom-file-label" for="customFile">Select image</label>
           </div>
           <br><br><br>
-        <button type="submit" class="btn btn-primary" name="savePL">Save playlist</button>
+        <button type="submit" class="btn btn-primary" name="saveplaylist">Save playlist</button>
       </form>
     </div>
   </body>
