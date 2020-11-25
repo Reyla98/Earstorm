@@ -14,8 +14,8 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item active" >
-          <a class="nav-link link">{{username}}</a>
+          <li class="nav-item">
+            <a class="nav-link link" href="/account">{{username}}</a>
           </li>
         </ul>
         <form action="searchplaylist" class="form-inline my-2 my-lg-0" method="get">
@@ -27,9 +27,9 @@
     <div class="container">
       <h4>Create a playlist:</h4>
       <form action="createPlaylist" method="post">
-        <label for="playlist_name">Playlist name:<br><sm>Please use commas to separate the different links.</sm></label><br>
+        <label for="playlist_name">Playlist name:</label><br>
           <textarea id="playlist_name" name="playlist_name" required></textarea><br><br>
-        <label for="playlist_titles">Titles:</label><br>
+        <label for="playlist_titles">Titles:<br><sm>Please use commas to separate the different links.</sm></label><br>
           <textarea id="playlist_titles" name="playlist_titles" required></textarea><br><br>
         <label for="playlist_genres">Genres:</label>
         <fieldset>
@@ -62,6 +62,9 @@
 
           <input type="checkbox" id="techno" name="playlist_genres" value="techno">
           <label for="techno">Techno </label>
+		  
+		  <input type="checkbox" id="other" name="playlist_genres" value="other">
+          <label for="techno">Other </label>
         </fieldset><br>
         <label for="playlist_add_genre">Additional genres:
           <br><sm>Please use commas to separate genres if adding multiple.
@@ -72,21 +75,23 @@
           <textarea id="playlist_descr" name="playlist_descr"></textarea><br><br>
         <label for="playlist_image">Image: <sm>(optional)</sm></label>
           <div class="custom-file">
-            <input type="file" class="custom-file-input" id="customFile">
+            <input type="file" class="custom-file-input" id="customFile" accept="image/*">
             <label class="custom-file-label" for="customFile">Select image</label>
           </div>
           <br><br><br>
-        <button type="submit" class="btn btn-primary" name="saveplaylist">Save playlist</button>
+        <div class="col text-center"><button type="submit" class="btn btn-primary" name="saveplaylist">Save playlist</button></div>
       </form>
     </div>
   </body>
+  <!--  DOES NOT SEEM TO WORK ~ need to find solution for filename to show up
   <script>
-  // Add the following code if you want the name of the file appear on select
+  // Add the following code if you want the name of the file to appear on select
     $(".custom-file-input").on("change", function() {
       var fileName = $(this).val().split("\\").pop();
       $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
   </script>
+  -->
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
