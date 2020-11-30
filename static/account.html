@@ -27,7 +27,7 @@
     <div class="container">
       <h4>{{username}}</h4>
       <h4>My Playlists</h4>
-      <form action=addPlaylist action="/new_playlist.html">
+      <form action="addPlaylist" method="get">
         <button class="btn btn-primary">Create new Playlist</button><br>
       </form>
       <table align="center" class="playlist_table">
@@ -57,7 +57,9 @@
 
       </table>
       <br>
-      <button class="btn btn-primary mx-auto d-block">Log out</button>
+      <form action="/logout" method=get>
+        <button class="btn btn-primary mx-auto d-block" type="submit" >Log out</button>
+      </form>
     </div>
   </body>
 
