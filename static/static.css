@@ -127,6 +127,10 @@ label sm{
   margin-right:10%;       /* might be a conflict with Laurane's pages */
 }
 
+.btn {
+  margin-bottom: 8px;
+}
+
 
 /* ids */
 

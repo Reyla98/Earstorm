@@ -44,14 +44,14 @@ app.post('/signup', function(req,res){
 });
 
 app.get('/addPlaylist', function(req,res){
-    res.render('create_pl.html', {username:req.session.username});
+    res.render('create_playlist.html', {username:req.session.username});
 });
 
 app.post('/createPlaylist', function(req,res){
     res.redirect('/homepage');
 });
 
-app.get('/searchplaylist', function(req,res){
+app.get('/searchPlaylist', function(req,res){
     //TODO
     res.redirect('/homepage');
 });
