@@ -47,7 +47,7 @@ MongoClient.connect('mongodb://localhost:27017/earstorm', (err, db)=>{
         dbo.collection('users').findOne({"username": username}, function(err, result){
             if(err) throw err;
             if (result==null){
-                res.render("login.html");
+                res.render("login.html", {loginErrorMessage: "No account with that username"});
             }
             else{
                 bcrypt.compare(req.body.loginPassword, result.password, function(err, result){
@@ -57,7 +57,7 @@ MongoClient.connect('mongodb://localhost:27017/earstorm', (err, db)=>{
                         res.render('account.html', {username:username});
                     }
                     else{
-                        res.render('login.html');
+                        res.render('login.html', {loginErrorMessage:"Wrong password"});
                     }
                 });
             }
@@ -65,26 +65,26 @@ MongoClient.connect('mongodb://localhost:27017/earstorm', (err, db)=>{
     });
     
     app.post('/signup', function(req,res){
-        var username = req.body.signUpUsername;
-        var password = req.body.signUpPassword;
-        var email = req.body.emailAddress;
-        dbo.collection('users').findOne({"username":username}, function(err, result){
+        dbo.collection('users').findOne({"username":req.body.signUpUsername}, function(err, result){
             if(err) throw err;
             if(result!=null){
-                res.render('login.html');
+                res.render('login.html', {signupErrorMessage:"Username already taken"});
             }
             else{
-                bcrypt.hash(password, saltRounds, function(err, result){
+                let username = req.body.signUpUsername;
+                let password = req.body.signUpPassword;
+                let email = req.body.emailAddress;
+                bcrypt.hash(password, saltRounds, function(err, hash){
                     if(err)throw err;
-                    var newUser = {"username": username, "password":result, "email":email};
+                    var newUser = {"username": username, "password":hash, "email":email};
                     dbo.collection('users').insertOne(newUser, function(err, result){
                         if (err) throw err;
                         console.log('User added successfuly');
                     });
                 });
+                req.session.username=username;
+                res.render("account.html", {"username":username});
             }
-            req.session.username=username;
-            res.render("account.html", {"username":username});
         });
     });
     
