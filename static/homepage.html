@@ -30,28 +30,38 @@
     <div class="container">
       <h4>Browse through genres:</h4>
       <form name=filterGenre method=get action='/showAll'>
-        <input type="checkbox" id="genre_alternative" name="genre_alternative">
-        <label for="filterGenre"> Alternative</label>
-        <input type="checkbox" id="genre_country" name="genre_country">
-        <label for="filterGenre"> Country</label>
-        <input type="checkbox" id="genre_folk" name="genre_folk">
-        <label for="filterGenre"> Folk</label>
-        <input type="checkbox" id="genre_house" name="genre_house">
-        <label for="filterGenre"> House</label>
-        <input type="checkbox" id="genre_latino" name="genre_latino">
-        <label for="filterGenre"> Latino</label>
-        <input type="checkbox" id="genre_metal" name="genre_metal">
-        <label for="filterGenre"> Metal</label>
-        <input type="checkbox" id="genre_pop" name="genre_pop">
-        <label for="filterGenre"> Pop</label>
-        <input type="checkbox" id="genre_punk" name="genre_punk">
-        <label for="filterGenre"> Punk</label>
-        <input type="checkbox" id="genre_rock" name="genre_rock">
-        <label for="filterGenre"> Rock</label>
-        <input type="checkbox" id="genre_techno" name="genre_techno">
-        <label for="filterGenre"> Techno</label>
-        <input type="checkbox" id="genre_other" name="genre_other">
-        <label for="filterGenre"> Other</label><br>
+          <input type="checkbox" name="playlist_genres" value="alternative" {{checked}}>
+          <label for="filterGenre">Alternative </label>
+
+          <input type="checkbox" name="playlist_genres" value="country" {{checked}}>
+          <label for="country">Country </label>
+
+          <input type="checkbox" name="playlist_genres" value="folk" {{checked}}>
+          <label for="folk">Folk </label>
+
+          <input type="checkbox" name="playlist_genres" value="house" {{checked}}>
+          <label for="house">House </label>
+
+          <input type="checkbox" name="playlist_genres" value="latino" {{checked}}>
+          <label for="latino">Latino </label>
+
+          <input type="checkbox" name="playlist_genres" value="metal" {{checked}}>
+          <label for="metal">Metal </label>
+
+          <input type="checkbox" name="playlist_genres" value="pop" {{checked}}>
+          <label for="pop">Pop </label>
+
+          <input type="checkbox" name="playlist_genres" value="punk" {{checked}}>
+          <label for="punk">Punk </label>
+
+          <input type="checkbox" name="playlist_genres" value="rock" {{checked}}>
+          <label for="rock">Rock </label>
+
+          <input type="checkbox" name="playlist_genres" value="techno" {{checked}}>
+          <label for="techno">Techno </label>
+      
+          <input type="checkbox" name="playlist_genres" value="other">
+          <label for="techno">Other </label>
         <button class="btn btn-primary">Show all</button><br>
       </form>
 
