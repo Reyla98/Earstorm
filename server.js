@@ -115,4 +115,3 @@ MongoClient.connect('mongodb://localhost:27017/earstorm', (err, db)=>{
         console.log('Server running on port 8080');
     });
 });
-
