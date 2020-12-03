@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.use(bodyParser.text());
 
-MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net/Earstorm?retryWrites=true&w=majority', { useNewUrlParser: true }, (err, db)=>{
+MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net/Earstorm?retryWrites=true&w=majority', { useUnifiedTopology: true }, (err, db)=>{
   if(err) throw err;
   var dbo = db.db('earstorm');
 	
@@ -87,7 +87,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
   });
 	
 	app.get('/addPlaylist', function(req,res){
-			res.render('create_pl.html', {username:req.session.username});
+			res.render('create_playlist.html', {username:req.session.username});
 	});
 	
   app.post('/createPlaylist', function(req,res){
@@ -96,7 +96,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		//let creator = req.session.username;
 		let creation_date = new Date();
 		let mod_date = new Date();
-		//let genres = (req.body.playlist_genres).replace(/&/g, '').split("playlist_genres");
+		//let genres = (req.body.playlist_genres).replace(/&/g, "").split("playlist_genres");
+		let titles = (req.body.playlist_titles).replace(/ /g, "").split(",");
 		if (req.session.playlist_id == null){
 			let playlistInfo = {
 				//illustration,
