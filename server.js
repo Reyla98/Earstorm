@@ -68,7 +68,7 @@ app.post('/createPlaylist', function(req,res){
 	let creation_date = new Date();
 	let mod_date = new Date();
 	let genres = (req.body.playlist_genres).replace(/&/g, '').split("playlist_genres");
-	let titles = (req.body.playlist_titles).split(", ");
+	let titles = (req.body.playlist_titles)..replace(/ /g, '')split(",");
 	let playlistInfo = {
 		illustration,
 		name,
@@ -89,7 +89,7 @@ app.post('/modifyPlaylist', function(req,res){
 	let name = req.body.playlist_name;
 	let mod_date = new Date();
 	let genres = (req.body.playlist_genres).replace(/&/g, '').split("playlist_genres");
-	let titles = (req.body.playlist_titles).split(", ");
+	let titles = (req.body.playlist_titles).replace(/ /g, '').split(",");
 	let playlistInfo = {
 		illustration,
 		name,
@@ -119,23 +119,6 @@ app.get('/logout', function(req,res){
 app.listen(port, function(){
     console.log('Server running on port 8080');
 });
-
-async function findID(pltitle) {
-	try {
-		await client.connect();
-		console.log("Connected correctly to server");
-		const db = client.db(dbName);
-		const col = db.collection("playlists");
-		const PL_ID = await col.find({"name":pltitle},{"name":0,"creation_date":0, "mod_date":0});
-		console.log(PL_ID);
-			
-	} catch (err) {
-		console.log(err.stack);
-		
-	} finally {
-		await client.close();
-	}
-}
 
 async function add(playlistInfo) {
 	try {
