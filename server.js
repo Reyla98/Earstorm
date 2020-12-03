@@ -17,6 +17,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.use(bodyParser.text());
 
+
 MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net/Earstorm?retryWrites=true&w=majority', { useUnifiedTopology: true }, (err, db)=>{
   if(err) throw err;
   var dbo = db.db('earstorm');
@@ -26,12 +27,16 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 	});
 	
 	app.get('/homepage', function(req,res){
-			if(req.session.username!=null){
-					res.render("homepage.html", {username:req.session.username});
-			}
-			else{
-					res.render('homepage.html', {login:"Log in"});
-			}
+        dbo.collection('playlists').find({}).toArray(function(err,doc){
+            if(req.session.username!=null){
+                let newDoc = {"playlist_list": doc, username:req.session.username}
+                res.render("homepage.html",newDoc);
+            }
+            else{
+                let newDoc = {"playlist_list": doc, login:"Log in"}
+                res.render('homepage.html', newDoc);
+            }
+        });
 	});
 	
 	app.get('/login', function(req,res){
@@ -39,7 +44,10 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 	});
 	
 	app.get('/account', function(req,res){
-			res.render('account.html', {username:req.session.username});
+        dbo.collection('playlists').find({creator : req.session.username}).toArray(function(err,doc){
+            if(err)throw err;
+            res.render("account.html", {"playlist_list" : doc, username:req.session.username});
+        });
 	});
 
 	app.post('/login', function(req,res){
@@ -53,7 +61,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 					if(err) throw err;
 					if(result){
 						req.session.username = username;
-						res.render('account.html', {username:username});
+						res.redirect('/account');
 					}else{
 						res.render('login.html', {loginErrorMessage:"Wrong password"});
 					}
@@ -88,40 +96,52 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 	
 	app.get('/addPlaylist', function(req,res){
 			res.render('create_playlist.html', {username:req.session.username});
-	});
+    });
+    
+    app.get('/modifyPlaylist', function(req,res){
+        req.session.id = null;
+        res.render('create_playlist.html', {username:req.session.username});
+    });
 	
   app.post('/createPlaylist', function(req,res){
-		//let illustration = req.body.customFile
-		let name = req.body.playlist_name;
-		//let creator = req.session.username;
-		let creation_date = new Date();
-		let mod_date = new Date();
-		//let genres = (req.body.playlist_genres).replace(/&/g, "").split("playlist_genres");
+		let illustration = req.body.customFile;
+        let title = req.body.playlist_name;
+        let description = req.body.playlist_descr || "No description";
+		let creator = req.session.username;
+		let creation_date = getFullDate();
+		let mod_date = getFullDate();
+        let genres = req.body.playlist_genres;
+        let otherGenres = (req.body.playlist_add_genre).replace(/ /g, "").split(",");
+        for(i in otherGenres){
+            genres.push(otherGenres[i]);
+        }
 		let titles = (req.body.playlist_titles).replace(/ /g, "").split(",");
 		if (req.session.playlist_id == null){
 			let playlistInfo = {
-				//illustration,
-				name,
-				//creator,
-				creation_date,
-				mod_date,
-				//genres,
-				titles
+				picture : null,
+                title : title,
+                description : description,
+				creator : creator,
+				creation_date : creation_date,
+				modification_date : mod_date,
+				genres :genres,
+				titles : titles
 			};
 			dbo.collection('playlists').insertOne(playlistInfo, function(err,result){
 				if(err) throw err;
 					console.log('Playlist added successfully');
 				});
-		} else {
+        } else {
 			let playlistInfo = {
-				//illustration,
-				name,
-				mod_date,
-				//genres,
-				titles
+				picture : null,
+                title : title,
+                description : description || "No description",
+				modification_date : mod_date,
+				genres :genres,
+				titles : titles
 			};
 			let id = req.session.playlist_id;
-			dbo.collection('playlists').update({_id:id},{$set:{playlistInfo}}, function(err,result){
+			dbo.collection('playlists').updateOne({_id:id},{$set:{playlistInfo}}, function(err,result){
 				if(err) throw err;
 					console.log('Playlist modified successfully');
 			});
@@ -150,3 +170,9 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 	});
 	
 });
+
+function getFullDate(){
+    let date = new Date();
+    let d = date.getDate() + "/" + (Number(date.getMonth())+1).toString() +"/" + date.getFullYear();
+    return d;
+  }
