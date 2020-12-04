@@ -43,22 +43,18 @@
         {{#playlist_list}}
         <tr>
           <td>{{picture}}</td>
-          <td><a href="/playlist_content?title={{title}}">{{title}}</a></td>
+          <td><a href="/playlist_content?id={{_id}}">{{title}}</a></td>
           <td>{{description}}</td>
           <td>{{creation_date}}</td>
           <td>{{modification_date}}</td>
-          <td>
-            <form method="get" action='/modifyPlaylist'>
-              <button class="btn btn-link">Modify</button>
-            </form>
-          </td>
+          <td><a href="/modifyPlaylist?id={{_id}}" class="btn btn-link">Modify</a></td>
         </tr>
         {{/playlist_list}}
 
       </table>
       <br>
       <form action="/logout" method=get>
-        <button class="btn btn-primary mx-auto d-block" type="submit" >Log out</button>
+        <button class="btn btn-primary mx-auto d-block" type="submit">Log out</button>
       </form>
     </div>
   </body>
