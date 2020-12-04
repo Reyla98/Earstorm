@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>{{playlist_title}}</title>
+    <title>{{title}}</title>
     <link rel="stylesheet" href="static.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
   </head>
@@ -44,13 +44,13 @@
         <tr>
           <td>
             <button class="btn btn-default mx-auto d-block">
-              <a href={{song_URL}} target="song_player">
+              <a href="https://www.youtube.com/watch?v=7KGMHIt3mbE&list=PLb7LxJTDXSr510ESbUuhgDb2sEb5lx7qe&index=10&ab_channel=KralM%C3%BCzik" target="song_player">
                 <img src="../img/play-button.png" alt="play button" width="16px" height="16px" id="play_button">
               </a>
             </button>
           </td>
-          <td>{{titles}}</td>
-          <td>{{modification_date}}</td>
+          <td>{{url}}</td>
+          <td>{{date}}</td>
         </tr>
         {{/song_list}}
       </table>
