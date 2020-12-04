@@ -6,6 +6,8 @@ const port = 8080;
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const mongoose = require('mongoose');
+const imgModel = require('./model');
 
 //Set up server
 const app = express();
@@ -18,7 +20,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.text());
 
 
-MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net/Earstorm?retryWrites=true&w=majority', { useUnifiedTopology: true }, (err, db)=>{
+MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net/Earstorm?retryWrites=true&w=majority',
+                 {useUnifiedTopology: true, useNewUrlParser: true},
+                 (err, db) => {
     if (err) throw err;
     var dbo = db.db('earstorm');
 	
@@ -123,6 +127,16 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
         for (i in otherGenres) {
             genres.push(otherGenres[i]);
         }
+
+        let img_object = {
+            data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+            contentType: 'image/png'
+        }
+
+        imgModel.create(img_object, (err, item) => {
+            if (err) throw err;
+            res.redirect('/addPlaylist');
+        });
 
 		let urls = (req.body.playlist_titles).replace(/ /g, "").split(",");
 

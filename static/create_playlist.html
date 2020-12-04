@@ -26,7 +26,7 @@
     </nav>
     <div class="container">
       <h4>Create a playlist:</h4>
-      <form action="createPlaylist" method="post">
+      <form action="createPlaylist" method="post" enctype="multipart/form-data">
         <label for="playlist_name">Playlist name:</label><br>
           <textarea id="playlist_name" name="playlist_name" required></textarea><br><br>
         <label for="playlist_titles">Titles:<br><sm>Please use commas to separate the different links.</sm></label><br>
