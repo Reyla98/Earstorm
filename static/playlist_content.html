@@ -8,7 +8,7 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg fixed-top">
-      <a class="navbar-brand" href="/homepage">EarStorm <img src="../img/logo.png" width="50" height="50" alt="logo"></a>
+      <a class="navbar-brand" href="/homepage">EarStorm <img src="/img/logo.png" width="50" height="50" alt="logo"></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -30,10 +30,10 @@
     <div class="container">
       <img src={{playlist_image}} alt="playlist image" id="playlist_image" width="160px" height="160px">
       <iframe id="song_player" name="song_player" width="320px" height="250px" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      <h4>{{playlist_title}}</h4>
-      <p>{{playlist_creator}}</p>
-      <p>{{playlist_description}}</p>
-      <p>{{playlist_genres}}</p>
+      <h4>{{title}}</h4>
+      <p>{{creator}}</p>
+      <p>{{description}}</p>
+      <p>{{genres}}</p>
       <table align="center" class="playlist_table">
         <tr align="center">
           <th width="5%"></th>
@@ -49,7 +49,7 @@
               </a>
             </button>
           </td>
-          <td>{{title}}</td>
+          <td>{{titles}}</td>
           <td>{{modification_date}}</td>
         </tr>
         {{/song_list}}

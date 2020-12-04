@@ -26,37 +26,38 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		res.redirect('/homepage');
 	});
 	
-	app.get('/homepage', function(req, res){
-        dbo.collection('playlists').find({}).toArray(function(err, doc){
-            if (req.session.username!=null) {
-                let newDoc = {"playlist_list": doc, username:req.session.username}
-                res.render("homepage.html",newDoc);
+	app.get('/homepage', function(req, res) {
+        dbo.collection('playlists').find({}).toArray(function(err, doc) {
+            if (err) throw err;
+            if (req.session.username != null) {
+                let newDoc = {"playlist_list": doc, username:req.session.username, title:doc.title}
+                res.render("homepage.html", newDoc);
             } else {
-                let newDoc = {"playlist_list": doc, login:"Log in"}
+                let newDoc = {"playlist_list": doc, login:"Log in", title:doc.title}
                 res.render('homepage.html', newDoc);
             }
         });
 	});
 	
-	app.get('/login', function(req, res){
+	app.get('/login', function(req, res) {
 			res.render("login.html");
 	});
 	
-	app.get('/account', function(req, res){
-        dbo.collection('playlists').find({creator: req.session.username}).toArray(function(err, doc){
+	app.get('/account', function(req, res) {
+        dbo.collection('playlists').find({creator:req.session.username}).toArray(function(err, doc) {
             if (err) throw err;
             res.render("account.html", {"playlist_list": doc, username: req.session.username});
         });
 	});
 
-	app.post('/login', function(req, res){
+	app.post('/login', function(req, res) {
 		var username = req.body.loginUsername;
-		dbo.collection('users').findOne({"username": username}, function(err, result){
+		dbo.collection('users').findOne({"username": username}, function(err, result) {
 			if (err) throw err;
 			if (result == null){
-				res.render("login.html", {loginErrorMessage: "Unknown username"});
+				res.render("login.html", {loginErrorMessage:"Unknown username"});
 			} else {
-				bcrypt.compare(req.body.loginPassword, result.password, function(err, result){
+				bcrypt.compare(req.body.loginPassword, result.password, function(err, result) {
 					if (err) throw err;
 					if (result) {
 						req.session.username = username;
@@ -70,8 +71,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		});
 	});
 	
-	app.post('/signup', function(req, res){
-		dbo.collection('users').findOne({"username": req.body.signUpUsername}, function(err, result){
+	app.post('/signup', function(req, res) {
+		dbo.collection('users').findOne({"username": req.body.signUpUsername}, function(err, result) {
 				if(err) throw err;
 				if(result!=null){
 						res.render('login.html', {signupErrorMessage:"Username already taken"});
@@ -82,7 +83,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 						bcrypt.hash(password, saltRounds, function(err, hash){
 								if(err)throw err;
 								var newUser = {"username": username, "password":hash, "email":email};
-								dbo.collection('users').insertOne(newUser, function(err, result){
+								dbo.collection('users').insertOne(newUser, function(err, result) {
 										if (err) throw err;
 										console.log('User added successfully');
 								});
@@ -93,16 +94,16 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		});
   });
 	
-	app.get('/addPlaylist', function(req,res){
+	app.get('/addPlaylist', function(req, res) {
 			res.render('create_playlist.html', {username:req.session.username});
     });
     
-    app.get('/modifyPlaylist', function(req,res){
+    app.get('/modifyPlaylist', function(req, res) {
         req.session.id = null;
         res.render('create_playlist.html', {username:req.session.username});
     });
 	
-  app.post('/createPlaylist', function(req,res){
+  app.post('/createPlaylist', function(req, res) {
 		let illustration = req.body.customFile;
         let title = req.body.playlist_name;
         let description = req.body.playlist_descr || "No description";
@@ -150,7 +151,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				titles : titles
 			};
 			let id = req.session.playlist_id;
-			dbo.collection('playlists').updateOne({_id:id},{$set:{playlistInfo}}, function(err,result) {
+			dbo.collection('playlists').updateOne({_id:id}, {$set:{playlistInfo}}, function(err, result) {
 				if (err) throw err;
 					console.log('Playlist modified successfully');
 			});
@@ -158,23 +159,46 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		}
 		res.redirect("/account");
 	});
+
+    app.get('/playlist_content', function(req, res) {
+        let query_title = req.query.title;
+        dbo.collection('playlists').findOne({title:query_title}, function(err, doc) {
+            if (err) throw err;
+            if (req.session.username != null) {
+                res.render("playlist_content.html", {"song_list": doc,
+                                             username: req.session.username,
+                                             title: doc.title,
+                                             genres: doc.genres,
+                                             description: doc.description,
+                                             creator: doc.creator
+                                         });
+            } else {
+                res.render('playlist_content.html', {"song_list": doc,
+                                                     login:"Log in",
+                                                     title: doc.title,
+                                                     genres: doc.genres,
+                                                     description: doc.description,
+                                                     creator: doc.creator});
+            }
+        })
+    });
 	
-	app.get('/searchplaylist', function(req,res){
+	app.get('/searchplaylist', function(req, res) {
 		//TODO
 		res.redirect('/homepage');
 	});
 	
-	app.get('/showAll', function(req,res){
+	app.get('/showAll', function(req, res) {
 		//TODO
 		res.redirect('/homepage');
 	});
 	
-	app.get('/logout', function(req,res){
+	app.get('/logout', function(req, res) {
 		req.session.username = null;
 		res.redirect('/homepage');
 	});
 	
-	app.listen(port, function(){
+	app.listen(port, function() {
 		console.log('Server running on port 8080');
 	});
 	
