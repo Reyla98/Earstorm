@@ -228,14 +228,14 @@ function getFullDate() {
 
 function get_id(url){
 		let id = null;
-		if (url.includes("youtube"){
+		if (url.includes("youtube")){
 			id = url.split("=");
 			id = id[1];
 			if (id.includes("&")){
 				id = id.split("&");
 				id = id[0];
 			}
-		} else if (url.includes("youtu.be"){
+		} else if (url.includes("youtu.be")){
 			id = url.split("/");
 			id = id[(id.length)-1];
 		} 
