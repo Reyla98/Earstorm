@@ -106,11 +106,11 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 	
     app.post('/createPlaylist', function(req, res) {
 		let illustration = req.body.customFile;
-        let title = req.body.playlist_name;
-        let description = req.body.playlist_descr || "No description";
+    let title = req.body.playlist_name;
+    let description = req.body.playlist_descr || "No description";
 		let creator = req.session.username;
-		let creation_date = getFullDate();
-		let modification_date = getFullDate();
+		let creation_date = new Date();
+		let modification_date = new Date();
 
         if (Array.isArray(req.body.playlist_genres)) {
             var genres = req.body.playlist_genres; //jsp pq mais ça marche pas avec let
@@ -129,12 +129,13 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		if (req.session.playlist_id == null) {
             let songs = [];
             for (let url of urls) {
-                songs.push({'url': url, 'date': getFullDate()})
+								let vid_id = get_id(url);
+                songs.push({'url': url, 'date': new Date(), 'vid_id': vid_id})
             }
 			let playlistInfo = {
 				picture: null,
-                title: title,
-                description: description,
+        title: title,
+        description: description,
 				creator: creator,
 				creation_date: creation_date,
 				modification_date: modification_date,
@@ -153,13 +154,14 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
             }
             for (let url of urls) {
                 if (! url_already_in.includes(url)) {
-                    songs.push({url: url, date: getFullDate()})
+									let vid_id = get_id(url);
+                  songs.push({'url': url, 'date': new Date(), 'vid_id': vid_id})
                 }
             }
 			let playlistInfo = {
 				picture: null,
-                title: title,
-                description: description || "No description",
+        title: title,
+        description: description || "No description",
 				modification_date: mod_date,
 				genres: genres,
 				songs: songs
@@ -223,3 +225,19 @@ function getFullDate() {
     let d = date.getDate() + "/" + (Number(date.getMonth())+1).toString() +"/" + date.getFullYear();
     return d;
   }
+
+function get_id(url){
+		let id = null;
+		if (url.includes("youtube"){
+			id = url.split("=");
+			id = id[1];
+			if (id.includes("&")){
+				id = id.split("&");
+				id = id[0];
+			}
+		} else if (url.includes("youtu.be"){
+			id = url.split("/");
+			id = id[(id.length)-1];
+		} 
+		return id;
+	}
