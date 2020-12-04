@@ -19,50 +19,50 @@ app.use(bodyParser.text());
 
 
 MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net/Earstorm?retryWrites=true&w=majority', { useUnifiedTopology: true }, (err, db)=>{
-  if(err) throw err;
+  if (err) throw err;
   var dbo = db.db('earstorm');
 	
-	app.get('/', function(req,res){
+	app.get('/', function(req, res) {
 		res.redirect('/homepage');
 	});
 	
-	app.get('/homepage', function(req,res){
-        dbo.collection('playlists').find({}).toArray(function(err,doc){
-            if(req.session.username!=null){
+	app.get('/homepage', function(req, res){
+        dbo.collection('playlists').find({}).toArray(function(err, doc){
+            if (req.session.username!=null) {
                 let newDoc = {"playlist_list": doc, username:req.session.username}
                 res.render("homepage.html",newDoc);
-            }
-            else{
+            } else {
                 let newDoc = {"playlist_list": doc, login:"Log in"}
                 res.render('homepage.html', newDoc);
             }
         });
 	});
 	
-	app.get('/login', function(req,res){
+	app.get('/login', function(req, res){
 			res.render("login.html");
 	});
 	
-	app.get('/account', function(req,res){
-        dbo.collection('playlists').find({creator : req.session.username}).toArray(function(err,doc){
-            if(err)throw err;
-            res.render("account.html", {"playlist_list" : doc, username:req.session.username});
+	app.get('/account', function(req, res){
+        dbo.collection('playlists').find({creator: req.session.username}).toArray(function(err, doc){
+            if (err) throw err;
+            res.render("account.html", {"playlist_list": doc, username: req.session.username});
         });
 	});
 
-	app.post('/login', function(req,res){
+	app.post('/login', function(req, res){
 		var username = req.body.loginUsername;
 		dbo.collection('users').findOne({"username": username}, function(err, result){
-			if(err) throw err;
-			if (result==null){
+			if (err) throw err;
+			if (result == null){
 				res.render("login.html", {loginErrorMessage: "Unknown username"});
-			}else{
+			} else {
 				bcrypt.compare(req.body.loginPassword, result.password, function(err, result){
-					if(err) throw err;
-					if(result){
+					if (err) throw err;
+					if (result) {
 						req.session.username = username;
 						res.redirect('/account');
-					}else{
+					}
+                    else {
 						res.render('login.html', {loginErrorMessage:"Wrong password"});
 					}
 				});
@@ -70,13 +70,12 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		});
 	});
 	
-	app.post('/signup', function(req,res){
-		dbo.collection('users').findOne({"username":req.body.signUpUsername}, function(err, result){
+	app.post('/signup', function(req, res){
+		dbo.collection('users').findOne({"username": req.body.signUpUsername}, function(err, result){
 				if(err) throw err;
 				if(result!=null){
 						res.render('login.html', {signupErrorMessage:"Username already taken"});
-				}
-				else{
+				} else{
 						let username = req.body.signUpUsername;
 						let password = req.body.signUpPassword;
 						let email = req.body.emailAddress;
@@ -110,12 +109,22 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		let creator = req.session.username;
 		let creation_date = getFullDate();
 		let mod_date = getFullDate();
-        let genres = req.body.playlist_genres;
+
+        if (Array.isArray(req.body.playlist_genres)) {
+            var genres = req.body.playlist_genres; //jsp pq mais ça marche pas avec let
+        } else {
+            var genres = [];                       //idem
+            genres.push(req.body.playlist_genres);
+
+        }
+
         let otherGenres = (req.body.playlist_add_genre).replace(/ /g, "").split(",");
-        for(i in otherGenres){
+        for (i in otherGenres) {
             genres.push(otherGenres[i]);
         }
+
 		let titles = (req.body.playlist_titles).replace(/ /g, "").split(",");
+
 		if (req.session.playlist_id == null){
 			let playlistInfo = {
 				picture : null,
@@ -127,7 +136,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				genres :genres,
 				titles : titles
 			};
-			dbo.collection('playlists').insertOne(playlistInfo, function(err,result){
+			dbo.collection('playlists').insertOne(playlistInfo, function(err,result) {
 				if(err) throw err;
 					console.log('Playlist added successfully');
 				});
@@ -141,13 +150,13 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				titles : titles
 			};
 			let id = req.session.playlist_id;
-			dbo.collection('playlists').updateOne({_id:id},{$set:{playlistInfo}}, function(err,result){
-				if(err) throw err;
+			dbo.collection('playlists').updateOne({_id:id},{$set:{playlistInfo}}, function(err,result) {
+				if (err) throw err;
 					console.log('Playlist modified successfully');
 			});
 			req.session.playlist_id = null;
 		}
-		res.redirect("/homepage");
+		res.redirect("/account");
 	});
 	
 	app.get('/searchplaylist', function(req,res){
