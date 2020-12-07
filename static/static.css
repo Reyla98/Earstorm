@@ -234,6 +234,16 @@ label sm{
   margin-bottom: 8px;
 }
 
+.long_text_area {
+  height: 100px;
+  width: 100%;
+}
+
+.one_line_text_area {
+  height: 30px;
+  width: 100%;
+}
+
 
 /* ids */
 
@@ -247,16 +257,6 @@ label sm{
   float:right;
   padding-bottom: 10px;
   padding-left: 10px;
-}
-
-#playlist_add_genre, #playlist_descr {
-  height: 100px;
-  width: 100%;
-}
-
-#playlist_name {
-  height: 30px;
-  width: 100%;
 }
 
 #playlist_titles {
