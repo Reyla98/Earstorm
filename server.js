@@ -24,7 +24,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
     var dbo = db.db('earstorm');
     
     app.get('/', function(req, res) {
-        res.redirect('/homepage');
+        res.render('welcome_page.html');
     });
     
     app.get('/homepage', function(req, res) {

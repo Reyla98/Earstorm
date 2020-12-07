@@ -11,12 +11,80 @@
   background-color: ghostwhite;
   justify-content: space-evenly;
   align-items: baseline;
+  font-family: georgia;
 }
 
 #login_container {
   display: flex;
 }
 
+/*homepage*/
+.homepage{
+  height:100%;
+}
+.homepage .bg{
+  background-image: url(".//img/bg.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height:100vh;
+  filter: blur(6px);
+  -webkit-filter: blur(6px);
+}
+.homepage .content h4{
+  padding: 20px 50px 20px 50px;
+  background-color: rgb(0,0,0, 0.4);
+  color:white;
+  font-weight: bold;
+  position: absolute;
+  top:45%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 5em;
+}
+
+.homepage .content button{
+  transition: 0.4s;
+  box-shadow: 6px 6px 10px 10px rgba(0,0,0,0.2);
+  position: absolute;
+  top : 65%;
+  left : 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  background-color: transparent;
+  color:white;
+  border : 1px solid white;
+  font-size: 2em;
+  padding: 10px 20px 10px 20px;
+  overflow: hidden;
+  outline: none;
+
+}
+
+.homepage .content button:hover{
+  box-shadow: 1px 1px 25px 10px rgba(255, 255, 255, 0.4);
+}
+
+.homepage .content button:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transition: all 650ms;
+}
+
+.homepage .content button:hover:before {
+  left: 100%;
+}
 
 /* navbar */
 nav {
@@ -37,6 +105,10 @@ nav {
   font-weight:bold;
 }
 
+.navbar-brand:hover{
+  color:orange;
+}
+
 .nav-link:hover {
   color:orange;
 }
@@ -51,18 +123,49 @@ nav {
 
 
 /* tables */
+.container table tbody tr td a{
+  text-decoration: none;
+  color:black;
+}
+
+.container table tbody tr td a:hover{
+  color:orange;
+  transition: 0.2s;
+}
+
+
+.container table thead{
+  background-color: orange;
+}
+
+.container table thead tr th{
+  padding: 10px;
+  font-size: 1.15em;
+  text-align: left;
+}
+
+.container table tbody tr{
+  border-bottom: 1px solid #dddddd;
+}
+
+.container table tbody tr:last-of-type{
+  border-bottom: 2px solid black;
+}
+
 .container table {
   width:90%;
+  box-shadow: 0 0 20px rgba(0,0,0,0.15);
 }
 
 .playlist_table {
   border-collapse: collapse;
-  border-color: black;
-  width: 90%
+  width: 90%;
+  border-radius:10px 10px 0 0;
+  overflow: hidden;
 }
 
 .playlist_table th, .playlist_table td {
-  border:1px solid black;
+  padding: 7px;
 }
 
 

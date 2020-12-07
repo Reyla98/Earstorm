@@ -66,20 +66,24 @@
       </form>
 
       <table align="center" class="playlist_table">
-        <tr align="center">
-          <th width="5%"></th>
-          <th width="20%">Title</th>
-          <th width="24%">Description</th>
-          <th width="15%">Creator</th>
-          <th width="13%">Created on</th>
-          <th width="13%">Last modified on</th>
-        </tr>
+        <thead>
+          <tr align="center">
+            <th width="5%"></th>
+            <th width="15%">Title</th>
+            <th width="24%">Description</th>
+            <th width="10%">Creator</th>
+            <th width="18%">Created on</th>
+            <th width="18%">Last modified on</th>
+        </thead>
+        <tbody>
+          </tr>
 
-        {{#playlist_list}}
-        <tr>
-          <td>{{picture}}</td><td><a href="/playlist_content?id={{_id}}">{{title}}</a></td><td>{{description}}</td><td>{{creator}}</td><td>{{creation_date}}</td><td>{{modification_date}}</td>
-        </tr>
-        {{/playlist_list}}
+          {{#playlist_list}}
+          <tr>
+            <td>{{picture}}</td><td><a href="/playlist_content?id={{_id}}">{{title}}</a></td><td>{{description}}</td><td>{{creator}}</td><td>{{creation_date}}</td><td>{{modification_date}}</td>
+          </tr>
+          {{/playlist_list}}
+        </tbody>
 
       </table>
       
