@@ -30,10 +30,17 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
     app.get('/homepage', function(req, res) {
         dbo.collection('playlists').find({}).toArray(function(err, doc) {
             if (err) throw err;
+            for (let playlist of doc) {
+                console.log(getFullDate(playlist.modification_date));
+                playlist.modification_date = new Date(playlist.modification_date).toLocaleDateString(undefined, {month: 'long', year: 'numeric', day: 'numeric'});
+                playlist.creation_date = new Date(playlist.creation_date).toLocaleDateString(undefined, {month: 'long', year: 'numeric', day: 'numeric'});
+            }
             if (req.session.username != null) {
+                console.log()
                 let newDoc = {"playlist_list": doc, username:req.session.username, title:doc.title}
                 res.render("homepage.html", newDoc);
             } else {
+                console.log(doc);
                 let newDoc = {"playlist_list": doc, login:"Log in", title:doc.title}
                 res.render('homepage.html', newDoc);
             }
@@ -213,6 +220,9 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
         let id = req.query.id;
         dbo.collection('playlists').findOne({"_id": ObjectId(id)}, function(err, doc) {
             if (err) throw err;
+            for (let song of doc.songs) {
+                song.date = new Date(song.date).toLocaleDateString(undefined, {month: 'long', year: 'numeric', day: 'numeric'});
+            }
             if (req.session.username != null) {
                 res.render("playlist_content.html", {"song_list": doc.songs,
                                                      username: req.session.username,
