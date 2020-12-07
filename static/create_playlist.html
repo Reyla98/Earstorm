@@ -28,51 +28,53 @@
       <h4>Create a playlist:</h4>
       <form action="createPlaylist" method="post">
         <label for="playlist_name">Playlist name:</label><br>
-        <textarea id="playlist_name" name="playlist_name" required>{{title}}</textarea><br><br>
+        <textarea class="one_line_text_area" name="playlist_name" required>{{title}}</textarea><br><br>
+
         <label for="playlist_songs">Songs:<br><sm>Provide here URLs to songs. Please use commas to separate the different links. If you provide links from Youtube, you will be able to play them directly from the website. You can add links from other platforms, but you won't be able to play them from EarStorm.</sm></label><br>
-        <textarea id="playlist_songs" name="playlist_songs" required>{{songs}}</textarea><br><br>
+        <textarea class="long_text_area" name="playlist_songs" required>{{songs}}</textarea><br><br>
+
         <label for="playlist_genres">Genres:</label>
         <fieldset>
-          <input type="checkbox" name="playlist_genres" value="alternative" {{alternative_checked}}>
+          <input type="checkbox" name="playlist_genres" value="alternative" {{alternative}}>
           <label for="alternative">Alternative </label>
 
-          <input type="checkbox" name="playlist_genres" value="country" {{country_checked}}>
+          <input type="checkbox" name="playlist_genres" value="country" {{country}}>
           <label for="country">Country </label>
 
-          <input type="checkbox" name="playlist_genres" value="folk" {{folk_checked}}>
+          <input type="checkbox" name="playlist_genres" value="folk" {{folk}}>
           <label for="folk">Folk </label>
 
-          <input type="checkbox" name="playlist_genres" value="house" {{house_checked}}>
+          <input type="checkbox" name="playlist_genres" value="house" {{house}}>
           <label for="house">House </label>
 
-          <input type="checkbox" name="playlist_genres" value="latino" {{latino_checked}}>
+          <input type="checkbox" name="playlist_genres" value="latino" {{latino}}>
           <label for="latino">Latino </label>
 
-          <input type="checkbox" name="playlist_genres" value="metal" {{matal_checked}}>
+          <input type="checkbox" name="playlist_genres" value="metal" {{metal}}>
           <label for="metal">Metal </label>
 
-          <input type="checkbox" name="playlist_genres" value="pop" {{pop_checked}}>
+          <input type="checkbox" name="playlist_genres" value="pop" {{pop}}>
           <label for="pop">Pop </label>
 
-          <input type="checkbox" name="playlist_genres" value="punk" {{punk_checked}}>
+          <input type="checkbox" name="playlist_genres" value="punk" {{punk}}>
           <label for="punk">Punk </label>
 
-          <input type="checkbox" name="playlist_genres" value="rock" {{rock_checked}}>
+          <input type="checkbox" name="playlist_genres" value="rock" {{rock}}>
           <label for="rock">Rock </label>
 
-          <input type="checkbox" name="playlist_genres" value="techno" {{techno_checked}}>
+          <input type="checkbox" name="playlist_genres" value="techno" {{techno}}>
           <label for="techno">Techno </label>
-      
-          <input type="checkbox" name="playlist_genres" value="other" {{other_checked}}>
+
+          <input type="checkbox" name="playlist_genres" value="other" {{other}}>
           <label for="techno">Other </label>
         </fieldset><br>
         <label for="playlist_add_genre">Additional genres:<br>
           <sm>Please use commas to separate genres if adding multiple.
           </sm>
         </label><br>
-        <textarea id="playlist_add_genre" name="playlist_add_genre">{{add_genres}}</textarea><br><br>
+        <textarea class="long_text_area" name="playlist_add_genre">{{add_genres}}</textarea><br><br>
         <label for="playlist_descr">Description: <sm>(optional)</sm></label><br>
-        <textarea id="playlist_descr" name="playlist_descr">{{description}}</textarea><br><br>
+        <textarea class="long_text_area" name="playlist_descr">{{description}}</textarea><br><br>
         <label for="playlist_image">Image: <sm>(optional)</sm></label>
         <div class="custom-file">
           <input type="file" class="custom-file-input" id="customFile" accept="image/*">

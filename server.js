@@ -19,14 +19,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.text());
 
 
-MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net/Earstorm?retryWrites=true&w=majority', { useUnifiedTopology: true }, (err, db)=>{
+MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net/Earstorm?retryWrites=true&w=majority', { useUnifiedTopology: true }, (err, db) => {
     if (err) throw err;
     var dbo = db.db('earstorm');
-    
+
     app.get('/', function(req, res) {
         res.redirect('/homepage');
     });
-    
+
     app.get('/homepage', function(req, res) {
         dbo.collection('playlists').find({}).toArray(function(err, doc) {
             if (err) throw err;
@@ -39,11 +39,11 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
             }
         });
     });
-    
+
     app.get('/login', function(req, res) {
             res.render("login.html");
     });
-    
+
     app.get('/account', function(req, res) {
         dbo.collection('playlists').find({creator:req.session.username}).toArray(function(err, doc) {
             if (err) throw err;
@@ -71,7 +71,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
             }
         });
     });
-    
+
     app.post('/signup', function(req, res) {
         dbo.collection('users').findOne({"username": req.body.signUpUsername}, function(err, result) {
                 if(err) throw err;
@@ -94,39 +94,53 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                 }
         });
     });
-    
+
     app.get('/addPlaylist', function(req, res) {
         res.render('create_playlist.html', {username:req.session.username});
     });
-    
+
     app.get('/modifyPlaylist', function(req, res) {
         id = req.query.id;
+        req.session.playlist_id = id;
         dbo.collection('playlists').findOne({"_id" : ObjectId(id)}, function(err, doc) {
             if (err) throw err;
-            if (doc != null) {
-                let urls = [];
-                console.log(doc.songs);
-                for (let song of doc.songs) {
-                    urls.push(song.url);
-                }
-                urls = urls.join(', ');
-                res.render('create_playlist.html', {username: req.session.username,
-                                                    description: doc.description,
-                                                    title: doc.title,
-                                                    songs: urls
-                                                    });
-            } else {
-                res.render('create_playlist.html', {login:"Log in"});
+            let playlist_info = {};
+
+            //build a string with the urls
+            let urls = [];
+            for (let song of doc.songs) {
+                urls.push(song.url);
             }
+            playlist_info['songs'] = urls.join(', ');
+
+            //browse through genres
+            let standard_genres = ['alternative', 'country', 'folk', 'house',
+                                    'latino', 'metal', 'pop', 'punk', 'rock',
+                                    'techno', 'other'];
+            let other_genres = [];
+            for (let genre of doc.genres) {
+                if (standard_genres.includes(genre)) {
+                    playlist_info[genre] = "checked";
+                } else {
+                    other_genres.push(genre);
+                }
+            }
+            playlist_info[other_genres] = other_genres.join(', ');
+
+            //other info
+            playlist_info['username'] = req.session.username;
+            playlist_info['description'] = doc.description;
+            playlist_info['title'] = doc.title;
+
+            res.render('create_playlist.html', playlist_info);
         })
     });
-    
+
     app.post('/createPlaylist', function(req, res) {
         let illustration = req.body.customFile;
         let title = req.body.playlist_name;
         let description = req.body.playlist_descr || "No description";
         let creator = req.session.username;
-        let creation_date = new Date();
         let modification_date = new Date();
 
         if (Array.isArray(req.body.playlist_genres)) {
@@ -135,7 +149,6 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
             var genres = [];                       //idem
             genres.push(req.body.playlist_genres);
         }
-
         let otherGenres = (req.body.playlist_add_genre).replace(/ /g, "").split(",");
         for (i in otherGenres) {
             genres.push(otherGenres[i]);
@@ -144,50 +157,53 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
         let urls = (req.body.playlist_songs).replace(/ /g, "").split(",");
 
         if (req.session.playlist_id == null) {
+            console.log("Creating new playlist");
             let songs = [];
             for (let url of urls) {
-                                let vid_id = get_id(url);
-                songs.push({'url': url, 'date': new Date(), 'vid_id': vid_id})
+                songs.push({'url': url, 'date': new Date(), 'vid_id': get_id(url)});
             }
-            let playlistInfo = {
+            let playlist_info = {
                 picture: null,
                 title: title,
                 description: description,
                 creator: creator,
-                creation_date: creation_date,
+                creation_date: new Date(),
                 modification_date: modification_date,
                 genres: genres,
                 songs: songs
             };
-            dbo.collection('playlists').insertOne(playlistInfo, function(err,result) {
-                if(err) throw err;
-                    console.log('Playlist added successfully');
-                });
-        } else {
-            let songs = req.session.songs;
-            let url_already_in = {};
-            for (let song of songs) {
-                url_already_in.push(song.url);
-            }
-            for (let url of urls) {
-                if (! url_already_in.includes(url)) {
-                                    let vid_id = get_id(url);
-                  songs.push({'url': url, 'date': new Date(), 'vid_id': vid_id})
-                }
-            }
-            let playlistInfo = {
-                picture: null,
-                title: title,
-                description: description || "No description",
-                modification_date: mod_date,
-                genres: genres,
-                songs: songs
-            };
-            let id = req.session.playlist_id;
-            dbo.collection('playlists').updateOne({_id:id}, {$set:{playlistInfo}}, function(err, result) {
+            dbo.collection('playlists').insertOne(playlist_info, function(err,result) {
                 if (err) throw err;
+                console.log('Playlist added successfully');
+                }
+            );
+        } else {
+            let id = req.session.playlist_id;
+            dbo.collection('playlists').findOne({_id:ObjectId(id)}, function(err, doc) {
+                var songs = doc.songs;
+                let urls_already_in = [];
+                for (let song of songs) {
+                    urls_already_in.push(song.url);
+                }
+                for (let url of urls) {
+                    if (! urls_already_in.includes(url)) {
+                        let vid_id = get_id(url);
+                        songs.push({'url': url, 'date': new Date(), 'vid_id': vid_id});
+                    }
+                }
+                var playlist_info = {
+                    picture: null,
+                    title: title,
+                    description: description || "No description",
+                    modification_date: new Date(),
+                    genres: genres,
+                    songs: songs
+                };
+                dbo.collection('playlists').updateOne({_id: ObjectId(id)}, {$set:playlist_info}, function(err, result) {
+                    if (err) throw err;
                     console.log('Playlist modified successfully');
-            });
+                });
+            })
             req.session.playlist_id = null;
         }
         res.redirect("/account");
@@ -195,7 +211,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 
     app.get('/playlist_content', function(req, res) {
         let id = req.query.id;
-        dbo.collection('playlists').findOne({"_id" : ObjectId(id)}, function(err, doc) {
+        dbo.collection('playlists').findOne({"_id": ObjectId(id)}, function(err, doc) {
             if (err) throw err;
             if (req.session.username != null) {
                 res.render("playlist_content.html", {"song_list": doc.songs,
@@ -215,26 +231,26 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
             }
         })
     });
-    
+
     app.get('/searchplaylist', function(req, res) {
         //TODO
         res.redirect('/homepage');
     });
-    
+
     app.get('/showAll', function(req, res) {
         //TODO
         res.redirect('/homepage');
     });
-    
+
     app.get('/logout', function(req, res) {
         req.session.username = null;
         res.redirect('/homepage');
     });
-    
+
     app.listen(port, function() {
         console.log('Server running on port 8080');
     });
-    
+
 });
 
 function getFullDate() {
@@ -255,6 +271,6 @@ function get_id(url){
         } else if (url.includes("youtu.be")){
             id = url.split("/");
             id = id[(id.length)-1];
-        } 
+        }
         return id;
     }
