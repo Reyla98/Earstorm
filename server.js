@@ -125,7 +125,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                     other_genres.push(genre);
                 }
             }
-            playlist_info[other_genres] = other_genres.join(', ');
+            playlist_info['additional_genres'] = other_genres.join(', ');
 
             //other info
             playlist_info['username'] = req.session.username;
@@ -149,9 +149,9 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
             var genres = [];                       //idem
             genres.push(req.body.playlist_genres);
         }
-        let otherGenres = (req.body.playlist_add_genre).replace(/ /g, "").split(",");
-        for (i in otherGenres) {
-            genres.push(otherGenres[i]);
+        let other_genres = (req.body.playlist_add_genre).replace(/ /g, "").split(",");
+        for (i in other_genres) {
+            genres.push(other_genres[i]);
         }
 
         let urls = (req.body.playlist_songs).replace(/ /g, "").split(",");
