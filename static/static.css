@@ -3,15 +3,32 @@
   margin-top: 25px;
   margin-left: 0px;
 }
-
+body .bg{
+  background-image: url(".//img/bg.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height:100vh;
+  filter: blur(6px);
+  -webkit-filter: blur(6px);
+}
 .container {
   margin-top: 100px;
   padding-top: 10px;
   padding-bottom: 10px;
-  background-color: ghostwhite;
+  background-color: rgba(0,0,0,0.5);
   justify-content: space-evenly;
   align-items: baseline;
   font-family: georgia;
+  color:white;
+  position: absolute;
+  top : 35%;
+  left : 50%;
+  transform: translate(-50%, -50%);
+}
+
+#createPlaylist{
+  top:55%;
 }
 
 #login_container {
@@ -125,7 +142,7 @@ nav {
 /* tables */
 .container table tbody tr td a{
   text-decoration: none;
-  color:black;
+  color:white;
 }
 
 .container table tbody tr td a:hover{
@@ -139,22 +156,22 @@ nav {
 }
 
 .container table thead tr th{
-  padding: 10px;
   font-size: 1.15em;
   text-align: left;
 }
+
 
 .container table tbody tr{
   border-bottom: 1px solid #dddddd;
 }
 
 .container table tbody tr:last-of-type{
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid white;
 }
 
 .container table {
   width:90%;
-  box-shadow: 0 0 20px rgba(0,0,0,0.15);
+  box-shadow: 0 0 20px rgba(255,255,255,0.15);
 }
 
 .playlist_table {
@@ -183,14 +200,14 @@ fieldset {
 .box {
   width: 40%;
   padding: 10px;
-  border: 1px solid black;
+  border: 1px solid white;
   margin: 5%;
   align-items: center;
 }
 
 .box h4 {
   padding: 10px;
-  border-bottom : 1px solid black;
+  border-bottom : 1px solid white;
 }
 
 .box form {
