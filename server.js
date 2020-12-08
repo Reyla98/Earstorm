@@ -31,9 +31,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
         dbo.collection('playlists').find({}).toArray(function(err, doc) {
             if (err) throw err;
             for (let playlist of doc) {
-                console.log(getFullDate(playlist.modification_date));
-                playlist.modification_date = new Date(playlist.modification_date).toLocaleDateString(undefined, {month: 'long', year: 'numeric', day: 'numeric'});
-                playlist.creation_date = new Date(playlist.creation_date).toLocaleDateString(undefined, {month: 'long', year: 'numeric', day: 'numeric'});
+                playlist.modification_date = getFullDate(playlist.modification_date);
+                playlist.creation_date = getFullDate(playlist.creation_date);
             }
             if (req.session.username != null) {
                 console.log()
@@ -54,6 +53,10 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
     app.get('/account', function(req, res) {
         dbo.collection('playlists').find({creator:req.session.username}).toArray(function(err, doc) {
             if (err) throw err;
+            for (let playlist of doc) {
+                playlist.modification_date = getFullDate(playlist.modification_date);
+                playlist.creation_date = getFullDate(playlist.creation_date);
+            }
             res.render("account.html", {"playlist_list": doc, username: req.session.username});
         });
     });
@@ -107,7 +110,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
     });
 
     app.get('/modifyPlaylist', function(req, res) {
-        id = req.query.id;
+        let id = req.query.id;
         req.session.playlist_id = id;
         dbo.collection('playlists').findOne({"_id" : ObjectId(id)}, function(err, doc) {
             if (err) throw err;
@@ -151,9 +154,9 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
         let modification_date = new Date();
 
         if (Array.isArray(req.body.playlist_genres)) {
-            var genres = req.body.playlist_genres; //jsp pq mais ça marche pas avec let
+            var genres = req.body.playlist_genres;
         } else {
-            var genres = [];                       //idem
+            var genres = [];
             genres.push(req.body.playlist_genres);
         }
         let other_genres = (req.body.playlist_add_genre).replace(/ /g, "").split(",");
@@ -263,10 +266,11 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 
 });
 
-function getFullDate() {
-    let date = new Date();
-    let d = date.getDate() + "/" + (Number(date.getMonth())+1).toString() +"/" + date.getFullYear();
-    return d;
+function getFullDate(d) {
+    let date = new Date(d);
+    let months = ["January", "February", "March", "April", "May", "June", "July", "Augustus", "September", "October", "November", "December"]
+    let fullDate = months[date.getMonth()] + " " + date.getDate() + ", "+ date.getFullYear();
+    return fullDate;
   }
 
 function get_id(url){
