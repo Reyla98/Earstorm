@@ -3,6 +3,8 @@ const consolidate = require('consolidate');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
+const https = require('https');
+const fs = require('fs');
 const port = 8080;
 const session = require('express-session');
 const bcrypt = require('bcrypt');
@@ -260,9 +262,13 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
         res.redirect('/homepage');
     });
 
-    app.listen(port, function() {
-        console.log('Server running on port 8080');
-    });
+    https.createServer({
+			key: fs.readFileSync('./key.pem'),
+			cert: fs.readFileSync('./cert.pem'),
+			passphrase: 'ingi'
+		}, app).listen(port, function(){
+			console.log('Server running on port 8080')
+		});
 
 });
 
