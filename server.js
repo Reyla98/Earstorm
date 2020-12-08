@@ -224,7 +224,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
         dbo.collection('playlists').findOne({"_id": ObjectId(id)}, function(err, doc) {
             if (err) throw err;
             for (let song of doc.songs) {
-                song.date = new Date(song.date).toLocaleDateString(undefined, {month: 'long', year: 'numeric', day: 'numeric'});
+                song.date = getFullDate(song.date);
             }
             if (req.session.username != null) {
                 res.render("playlist_content.html", {"song_list": doc.songs,
