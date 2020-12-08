@@ -37,11 +37,9 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                 playlist.creation_date = getFullDate(playlist.creation_date);
             }
             if (req.session.username != null) {
-                console.log()
                 let newDoc = {"playlist_list": doc, username:req.session.username, title:doc.title}
                 res.render("homepage.html", newDoc);
             } else {
-                console.log(doc);
                 let newDoc = {"playlist_list": doc, login:"Log in", title:doc.title}
                 res.render('homepage.html', newDoc);
             }
@@ -228,13 +226,18 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
             for (let song of doc.songs) {
                 song.date = getFullDate(song.date);
             }
+            if (doc.picture == null) {
+                doc.picture = 'img/logo.png'
+            }
             if (req.session.username != null) {
                 res.render("playlist_content.html", {"song_list": doc.songs,
                                                      username: req.session.username,
                                                      title: doc.title,
                                                      genres: doc.genres,
                                                      description: doc.description,
-                                                     creator: doc.creator
+                                                     creator: doc.creator,
+                                                     playlist_picture: doc.picture
+
                                                  });
             } else {
                 res.render('playlist_content.html', {"song_list": doc.songs,
@@ -242,7 +245,9 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                                                      title: doc.title,
                                                      genres: doc.genres,
                                                      description: doc.description,
-                                                     creator: doc.creator});
+                                                     creator: doc.creator,
+                                                     playlist_picture: doc.picture
+                                                    });
             }
         })
     });
