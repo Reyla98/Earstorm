@@ -1,3 +1,8 @@
+@font-face{
+  font-family:"Arvo";
+  src: url(".//fonts/arvo.ttf") format("truetype");
+}
+
 /* main components */
 .lead {
   margin-top: 25px;
@@ -19,15 +24,17 @@ body:before{
 }
 
 .container {
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0.55);
   justify-content: space-evenly;
   align-items: baseline;
   font-family: georgia;
   color: white;
   position: absolute;
-  top: 12%;
+  top: 15%;
   left:0%;
   right:0%;
+  font-family: arvo;
+  padding: 15px;
 }
 
 #createPlaylist{
@@ -42,16 +49,6 @@ body:before{
 /*homepage*/
 .homepage{
   height:100%;
-}
-
-.homepage .bg{
-  background-image: url("./img/background.webp");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  height:100vh;
-  filter: blur(6px);
-  -webkit-filter: blur(6px);
 }
 
 .homepage .content h4{
@@ -111,7 +108,7 @@ body:before{
 
 /* navbar */
 nav {
-  font-size: 15px;
+  font-size: 1.4em;
 }
 
 .navbar {
