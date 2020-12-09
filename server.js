@@ -9,6 +9,8 @@ const port = 8080;
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const getVideoId = require('get-video-id');
+const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 //Set up server
 const app = express();
@@ -106,7 +108,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
     });
 
     app.get('/addPlaylist', function(req, res) {
-        res.render('create_playlist.html', {username:req.session.username});
+			req.session.playlist_id = null;
+      res.render('create_playlist.html', {username:req.session.username});
     });
 
     app.get('/modifyPlaylist', function(req, res) {
@@ -115,14 +118,12 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
         dbo.collection('playlists').findOne({"_id" : ObjectId(id)}, function(err, doc) {
             if (err) throw err;
             let playlist_info = {};
-
             //build a string with the urls
             let urls = [];
             for (let song of doc.songs) {
                 urls.push(song.url);
             }
             playlist_info['songs'] = urls.join(', ');
-
             //browse through genres
             let standard_genres = ['alternative', 'country', 'folk', 'house',
                                     'latino', 'metal', 'pop', 'punk', 'rock',
@@ -169,8 +170,25 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
         if (req.session.playlist_id == null) {
             console.log("Creating new playlist");
             let songs = [];
-            for (let url of urls) {
-                songs.push({'url': url, 'date': new Date(), 'vid_id': get_id(url)});
+            for (let url of urls){
+							let vid_id = get_id(url);
+							let vid_title = null;
+							let vid_length = null;
+							if (vid_id != null){
+								let API_url = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=" + vid_id + "&key=AIzaSyDWSwITRSdspIeaC5upd9oZ6cE0z8b-bi4";
+								let API_data;
+								var request = new XMLHttpRequest();
+								request.open('GET', API_url, false);
+								request.send(null);
+								if (request.status === 200) {
+									API_data = request.responseText;
+								}
+								vid_title = API_data.replace(/"/g, "").replace("title: ", "").replace(/\n/g, "").replace(/  +/g, "").split(',');
+								vid_title = vid_title[7];
+								vid_length = API_data.replace(/"/g, "").replace("duration: ", "").replace(/\n/g, "").replace(/  +/g, "").replace(/,dimension:.*/, "").split('{');
+								vid_length = vid_length[11];
+							}
+							songs.push({'url': url, 'date': new Date(), 'vid_id': vid_id, 'vid_title': vid_title, 'vid_length': vid_length});
             }
             let playlist_info = {
                 picture: null,
@@ -197,8 +215,24 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                 }
                 for (let url of urls) {
                     if (! urls_already_in.includes(url)) {
-                        let vid_id = get_id(url);
-                        songs.push({'url': url, 'date': new Date(), 'vid_id': vid_id});
+											let vid_id = get_id(url);
+											let vid_title = null;
+											let vid_length = null;
+											if (vid_id != null){
+												let API_url = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=" + vid_id + "&key=AIzaSyDWSwITRSdspIeaC5upd9oZ6cE0z8b-bi4";
+												let API_data;
+												var request = new XMLHttpRequest();
+												request.open('GET', API_url, false);
+												request.send(null);
+												if (request.status === 200) {
+													API_data = request.responseText;
+												}
+												vid_title = API_data.replace(/"/g, "").replace("title: ", "").replace(/\n/g, "").replace(/  +/g, "").split(',');
+												vid_title = vid_title[7];
+												vid_length = API_data.replace(/"/g, "").replace("duration: ", "").replace(/\n/g, "").replace(/  +/g, "").replace(/,dimension:.*/, "").split('{');
+												vid_length = vid_length[11];
+											}
+											songs.push({'url': url, 'date': new Date(), 'vid_id': vid_id, 'vid_title': vid_title, 'vid_length': vid_length});
                     }
                 }
                 var playlist_info = {
@@ -307,17 +341,10 @@ function getFullDate(d) {
   }
 
 function get_id(url){
-        let id = null;
-        if (url.includes("youtube")){
-            id = url.split("=");
-            id = id[1];
-            if (id.includes("&")){
-                id = id.split("&");
-                id = id[0];
-            }
-        } else if (url.includes("youtu.be")){
-            id = url.split("/");
-            id = id[(id.length)-1];
-        }
-        return id;
-    }
+		let id = null;
+		if (url.includes("youtube") || url.includes("youtu.be")){
+			id = (getVideoId(url)).id;
+		}
+		return id;
+  }
+		
