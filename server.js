@@ -50,7 +50,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 							res.render('homepage.html', newDoc);
 					}
 			});
-    });
+	});
+	
 		
 		app.get('/sort_titles', function(req, res) {
 			if (req.session.search == null){
@@ -341,8 +342,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
             let urls = [];
             for (let song of doc.songs) {
                 urls.push(song.url);
-            }
-            playlist_info['songs'] = urls.join(', ');
+			}
+			playlist_info['songs'] = urls.join(', ');
             //browse through genres
             let standard_genres = ['alternative', 'country', 'folk', 'house',
                                     'latino', 'metal', 'pop', 'punk', 'rock',
@@ -384,7 +385,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
             genres.push(other_genres[i]);
         }
 
-        let urls = (req.body.playlist_songs).replace(/ /g, "").split(",");
+		let urls = (req.body.playlist_songs).replace(/ /g, "").replace("\n", "").replace("\r", "").split(",");
 
         if (req.session.playlist_id == null) {
             console.log("Creating new playlist");
