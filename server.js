@@ -227,7 +227,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                 song.date = getFullDate(song.date);
             }
             if (doc.picture == null) {
-                doc.picture = 'img/logo.png'
+                doc.picture = 'img/logo.png';
             }
             if (req.session.username != null) {
                 res.render("playlist_content.html", {"song_list": doc.songs,
@@ -253,8 +253,30 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
     });
 
     app.get('/searchplaylist', function(req, res) {
-        //TODO
-        res.redirect('/homepage');
+        dbo.collection('playlists').aggregate([{$search:
+            {
+                "text": {
+                    "query": req.query.search_words,
+                    "path": ["description", "creator", "title", "genres"],
+                    "fuzzy": {}
+                }
+            }
+        }]).toArray((err, doc) => {
+            if (err) throw err;
+            if (doc.length == 0) {
+                if (req.session.username != null) {
+                    res.render('homepage.html', {username: req.session.username, nomatchErrorMessage: "No match found"});
+                } else {
+                    res.render('homepage.html', {login: "Log in", nomatchErrorMessage: "No match found"});
+                }
+            } else if (req.session.username != null) {
+                let newDoc = {"playlist_list": doc, username: req.session.username};
+                res.render('homepage.html', newDoc);
+            } else {
+                let newDoc = {"playlist_list": doc, login: "Log in"};
+                res.render('homepage.html', newDoc);
+            }
+        });
     });
 
     app.get('/showAll', function(req, res) {
