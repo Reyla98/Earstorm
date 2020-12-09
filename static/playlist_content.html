@@ -8,27 +8,27 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg fixed-top">
-      <a class="navbar-brand" href="/homepage">EarStorm <img src="/img/logo.png" width="50" height="50" alt="logo"></a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-			<a class="nav-link link" href="/account">{{username}}</a>
-          </li>
-		  <li class="nav-item">
-            <a class="nav-link link" href="/login">{{login}}</a>
-          </li>
-        </ul>
-        <form action="searchplaylist" class="form-inline my-2 my-lg-0" method="get">
-          <input class="form-control mr-sm-2" type="search" name="search_words" placeholder="Search a playlist" aria-label="Search">
-          <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
-        </form>
-      </div>
-    </nav>
-    <div class="bg"></div>
+      <nav class="navbar navbar-expand-lg fixed-top">
+        <a class="navbar-brand" href="/homepage">EarStorm <img src="img/logo.png" width="50" height="50" alt="logo"></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+  			      <a class="nav-link link"  href="/account">{{username}}</a>
+            </li>
+  		      <li class="nav-item">
+              <a class="nav-link link" href="/login">{{login}}</a>
+            </li>
+          </ul>
+          <form action="searchplaylist" class="form-inline my-2 my-lg-0" method="get">
+            <input class="form-control mr-sm-2" type="search" name="search_words" placeholder="Search a playlist" aria-label="Search">
+            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+          </form>
+          <button class="btn btn-outline-light my-2" onclick="window.open('/advancedSearch')" title="Go to advanced search" href="/advancedSearch">+</button>
+        </div>
+      </nav>
     <div class="container">
       <img src={{playlist_picture}} alt="playlist image" id="playlist_image" width="160px" height="160px">
       <iframe id="song_player" name="song_player" width="320px" height="250px" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -38,28 +38,29 @@
       <p>{{genres}}</p>
       <table align="center" class="playlist_table">
         <thead>
-        <tr align="center">
-          <th width="5%"></th>
-          <th width="60%">Title</th>
-          <th width="20%">Added on</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#song_list}}
-        <tr>
-          <td>
-            <button class="btn btn-default mx-auto d-block">
-              <a href="https://www.youtube.com/embed/{{vid_id}}" target="song_player">
-                <img src="../img/play-button.png" alt="play button" width="16px" height="16px" id="play_button">
-              </a>
-            </button>
-          </td>
-          <td>{{url}}</td>
-          <td>{{date}}</td>
-        </tr>
-        {{/song_list}}
-      </tbody>
+          <tr align="center">
+            <th width="5%"></th>
+            <th width="60%">Title</th>
+            <th width="20%">Added on</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#song_list}}
+            <tr>
+              <td>
+                <button class="btn btn-default mx-auto d-block">
+                  <a href="https://www.youtube.com/embed/{{vid_id}}" target="song_player">
+                    <img src="../img/play-button.png" alt="play button" width="16px" height="16px" id="play_button">
+                  </a>
+                </button>
+              </td>
+              <td>{{url}}</td>
+              <td>{{date}}</td>
+            </tr>
+          {{/song_list}}
+        </tbody>
       </table>
+    </div>
   </body>
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
