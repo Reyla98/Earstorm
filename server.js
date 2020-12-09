@@ -118,12 +118,14 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
         dbo.collection('playlists').findOne({"_id" : ObjectId(id)}, function(err, doc) {
             if (err) throw err;
             let playlist_info = {};
+
             //build a string with the urls
             let urls = [];
             for (let song of doc.songs) {
                 urls.push(song.url);
             }
             playlist_info['songs'] = urls.join(', ');
+
             //browse through genres
             let standard_genres = ['alternative', 'country', 'folk', 'house',
                                     'latino', 'metal', 'pop', 'punk', 'rock',
@@ -313,6 +315,56 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
         });
     });
 
+    app.get('/advancedSearch', function(req, res) {
+        res.render('advanced_search.html');
+    })
+
+    app.post('/advancedSearch', function(req, res) {
+        console.log(req.body.description);
+        let date_from = new Date(req.body.date_from);
+        dbo.collection('playlists').aggregate([{$search:
+            {
+                "compound": {
+                    "should": [{
+                        "text": {
+                            "query": req.body.description,
+                            "path": ["description"],
+                            "fuzzy": {}
+                        }
+                    }, {
+                        "text": {
+                            "query": req.body.title,
+                            "path": ["title"],
+                            "fuzzy": {}
+                        }
+                    }],
+                    "must": [{
+                        "range": {
+                            "path": "creation_date",
+                            "gte": date_from
+                            //"lte": req.body.date_until
+                        }
+                    }]
+                }
+            }
+        }]).toArray((err, doc) => {
+            if (err) throw err;
+            if (doc.length == 0) {
+                if (req.session.username != null) {
+                    res.render('homepage.html', {username: req.session.username, nomatchErrorMessage: "No match found"});
+                } else {
+                    res.render('homepage.html', {login: "Log in", nomatchErrorMessage: "No match found"});
+                }
+            } else if (req.session.username != null) {
+                let newDoc = {"playlist_list": doc, username: req.session.username};
+                res.render('homepage.html', newDoc);
+            } else {
+                let newDoc = {"playlist_list": doc, login: "Log in"};
+                res.render('homepage.html', newDoc);
+            }
+        });
+    });
+
     app.get('/showAll', function(req, res) {
         //TODO
         res.redirect('/homepage');
@@ -347,4 +399,3 @@ function get_id(url){
 		}
 		return id;
   }
-		
