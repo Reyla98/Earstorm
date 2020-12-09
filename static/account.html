@@ -16,9 +16,9 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-      <a class="nav-link link"  href="/account">{{username}}</a>
+            <a class="nav-link link"  href="/account">{{username}}</a>
           </li>
-      <li class="nav-item">
+          <li class="nav-item">
             <a class="nav-link link" href="/login">{{login}}</a>
           </li>
         </ul>
@@ -26,44 +26,44 @@
           <input class="form-control mr-sm-2" type="search" name="search_words" placeholder="Search a playlist" aria-label="Search">
           <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
         </form>
-        <button class="btn btn-outline-light my-2" onclick="window.open('/advancedSearch')" title="Go to advanced search" href="/advancedSearch">+</button>
+        <button class="btn btn-outline-light my-2" onclick="document.location.href='/advancedSearch'" title="Go to advanced search" href="/advancedSearch">+</button>
       </div>
     </nav>
-      <div class="container">
-        <h4>{{username}}</h4>
-        <h4>My Playlists</h4>
-        <form action="addPlaylist" method="get">
-          <button class="btn btn-primary">Create new Playlist</button><br>
-        </form>
-        <table align="center" class="playlist_table">
-          <thead>
-          <tr align="center">
-            <th width="5%"></th>
-            <th width="20%">Title</th>
-            <th width="24%">Description</th>
-            <th width="13%">Created on</th>
-            <th width="13%">Last modified on</th>
-            <th width="15%"></th>
+    <div class="container">
+      <h4>{{username}}</h4>
+      <h4>My Playlists</h4>
+      <form action="addPlaylist" method="get">
+        <button class="btn btn-primary">Create new Playlist</button><br>
+      </form>
+      <table align="center" class="playlist_table">
+        <thead>
+        <tr align="center">
+          <th width="5%"></th>
+          <th width="20%">Title</th>
+          <th width="24%">Description</th>
+          <th width="13%">Created on</th>
+          <th width="13%">Last modified on</th>
+          <th width="15%"></th>
+        </tr>
+        </thead>
+        <tbody>
+          {{#playlist_list}}
+          <tr>
+            <td>{{picture}}</td>
+            <td><a href="/playlist_content?id={{_id}}">{{title}}</a></td>
+            <td>{{description}}</td>
+            <td>{{creation_date}}</td>
+            <td>{{modification_date}}</td>
+            <td><a href="/modifyPlaylist?id={{_id}}" class="btn btn-link">Modify</a></td>
           </tr>
-          </thead>
-          <tbody>
-            {{#playlist_list}}
-            <tr>
-              <td>{{picture}}</td>
-              <td><a href="/playlist_content?id={{_id}}">{{title}}</a></td>
-              <td>{{description}}</td>
-              <td>{{creation_date}}</td>
-              <td>{{modification_date}}</td>
-              <td><a href="/modifyPlaylist?id={{_id}}" class="btn btn-link">Modify</a></td>
-            </tr>
-            {{/playlist_list}}
-          </tbody>
-        </table>
-        <br>
-        <form action="/logout" method=get>
-          <button class="btn btn-primary mx-auto d-block" type="submit">Log out</button>
-        </form>
-      </div>
+          {{/playlist_list}}
+        </tbody>
+      </table>
+      <br>
+      <form action="/logout" method=get>
+        <button class="btn btn-primary mx-auto d-block" type="submit">Log out</button>
+      </form>
+    </div>
   </body>
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
