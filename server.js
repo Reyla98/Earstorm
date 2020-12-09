@@ -216,7 +216,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                 for (let url of urls) {
                     if (! urls_already_in.includes(url)) {
 											let vid_id = get_id(url);
-											let vid_title = null;
+											let vid_title = url;
 											let vid_length = null;
 											if (vid_id != null){
 												let API_url = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=" + vid_id + "&key=AIzaSyDWSwITRSdspIeaC5upd9oZ6cE0z8b-bi4";
