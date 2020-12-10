@@ -82,7 +82,7 @@
 
           {{#playlist_list}}
           <tr>
-            <td>{{picture}}</td><td><a href="/playlist_content?id={{_id}}">{{title}}</a></td><td>{{description}}</td><td>{{creator}}</td><td>{{creation_date}}</td><td>{{modification_date}}</td>
+            <td>{{picture}}</td><td><a href="/playlist_content?id={{_id}}">{{title}}</a></td><td class="ellipsis" title="{{description}}">{{description}}</td><td>{{creator}}</td><td>{{creation_date}}</td><td>{{modification_date}}</td>
           </tr>
           {{/playlist_list}}
         </tbody>

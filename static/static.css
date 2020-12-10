@@ -192,8 +192,16 @@ nav {
   padding: 7px;
 }
 
+.ellipsis {
+  max-width: 40px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+		
+}
 
-/* froms */
+
+/* forms */
 fieldset {
   border: 5px solid blue;  /* !!!!!!!!!!!! marche pas !!!!!!!!!!! */
 }
@@ -228,7 +236,11 @@ fieldset {
 
 /* various */
 .error_message {
-  color:red;
+  color:tomato;
+}
+
+.account_message {
+  color:GreenYellow;
 }
 
 h4 {
@@ -266,6 +278,15 @@ label sm{
 .one_line_text_area {
   height: 30px;
   width: 100%;
+}
+
+.del-link {
+  color:tomato;
+  font-weight:bold;
+}
+
+.del-link:hover {
+  color:white
 }
 
 

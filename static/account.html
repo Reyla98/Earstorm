@@ -18,9 +18,6 @@
           <li class="nav-item">
             <a class="nav-link link"  href="/account">{{username}}</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link link" href="/login">{{login}}</a>
-          </li>
         </ul>
         <form action="searchplaylist" class="form-inline my-2 my-lg-0" method="get">
           <input class="form-control mr-sm-2" type="search" name="search_words" placeholder="Search a playlist" aria-label="Search">
@@ -31,6 +28,7 @@
     </nav>
     <div class="container">
       <h4>{{username}}</h4>
+			<p class="account_message" align="center">{{accountMessage}}</p>
       <h4>My Playlists</h4>
       <form action="addPlaylist" method="get">
         <button class="btn btn-primary">Create new Playlist</button><br>
@@ -39,11 +37,11 @@
         <thead>
         <tr align="center">
           <th width="5%"></th>
-          <th width="20%">Title</th>
+          <th width="15%">Title</th>
           <th width="24%">Description</th>
-          <th width="13%">Created on</th>
-          <th width="13%">Last modified on</th>
-          <th width="15%"></th>
+          <th width="18%">Created on</th>
+          <th width="18%">Last modified on</th>
+          <th width="10%"></th>
         </tr>
         </thead>
         <tbody>
