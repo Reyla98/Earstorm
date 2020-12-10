@@ -411,35 +411,35 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			}
 			let other_genres = (req.body.playlist_add_genre).replace(/\n/g, "").split(",");
 			for (let genre of other_genres) {
-					genres.push(genre.replace(/^ +/g, "").replace(/ +$/g, ""));
+					genre = genre.replace(/^ +/g, "").replace(/ +$/g, "");
+					if (genre != ""){
+						genres.push(genre);
+					}
 				}
-			for (let genre of genres){
-				if (genre == ""){
-					genres = arrayRemove(genres, genre);
-				}
-			}
 			if (req.session.playlist_id == null) {
 				console.log("Creating new playlist");
 				let songs = [];
 				for (let url of urls){
-					let vid_id = get_id(url);
-					let vid_title = url;
-					let vid_length = null;
-					if (vid_id != null){
-						let API_url = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=" + vid_id + "&key=AIzaSyDWSwITRSdspIeaC5upd9oZ6cE0z8b-bi4";
-						let API_data;
-						var request = new XMLHttpRequest();
-						request.open('GET', API_url, false);
-						request.send(null);
-						if (request.status === 200) {
-							API_data = request.responseText;
+					if (url != ""){
+						let vid_id = get_id(url);
+						let vid_title = url;
+						let vid_length = null;
+						if (vid_id != null){
+							let API_url = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=" + vid_id + "&key=AIzaSyDWSwITRSdspIeaC5upd9oZ6cE0z8b-bi4";
+							let API_data;
+							var request = new XMLHttpRequest();
+							request.open('GET', API_url, false);
+							request.send(null);
+							if (request.status === 200) {
+								API_data = request.responseText;
+							}
+							vid_title = API_data.replace(/"/g, "").replace("title: ", "").replace(/\n/g, "").replace(/  +/g, "").split(',');
+							vid_title = vid_title[7];
+							vid_length = API_data.replace(/"/g, "").replace("duration: ", "").replace(/\n/g, "").replace(/  +/g, "").replace(/,dimension:.*/, "").split('{');
+							vid_length = vid_length[11];
 						}
-						vid_title = API_data.replace(/"/g, "").replace("title: ", "").replace(/\n/g, "").replace(/  +/g, "").split(',');
-						vid_title = vid_title[7];
-						vid_length = API_data.replace(/"/g, "").replace("duration: ", "").replace(/\n/g, "").replace(/  +/g, "").replace(/,dimension:.*/, "").split('{');
-						vid_length = vid_length[11];
+						songs.push({'url': url, 'date': new Date(), 'vid_id': vid_id, 'vid_title': vid_title, 'vid_length': vid_length});
 					}
-					songs.push({'url': url, 'date': new Date(), 'vid_id': vid_id, 'vid_title': vid_title, 'vid_length': vid_length});
 				}
 				let playlist_info = {
 					picture: null,
@@ -469,7 +469,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 						}
 					}
 					for (let url of urls) {
-						if (! urls_already_in.includes(url)) {
+						if (! urls_already_in.includes(url) && url != "") {
 							let vid_id = get_id(url);
 							let vid_title = url;
 							let vid_length = null;
