@@ -32,10 +32,12 @@
     <div class="container">
       <img src={{playlist_picture}} alt="playlist image" id="playlist_image" width="160px" height="160px">
       <iframe id="song_player" name="song_player" width="320px" height="250px" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      <h4>{{title}}</h4>
-      <p>{{creator}}</p>
-      <p>{{description}}</p>
-      <p>{{genres}}</p>
+      <div class="playlistInfos">
+        <h3>{{title}}</h3>
+        <p>By {{creator}}</p>
+        <p>{{description}}</p>
+        <p>Genres : {{genres}}</p>
+      </div>
       <table align="center" class="playlist_table">
         <thead>
           <tr align="center">
