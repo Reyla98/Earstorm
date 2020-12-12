@@ -31,14 +31,14 @@
     </nav>
     <div class="container">
       <img src={{playlist_picture}} alt="playlist image" id="playlist_image" width="160px" height="160px">
-      <iframe id="song_player" name="song_player" width="320px" height="250px" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <div class='player' id="player"></div>
       <div class="playlistInfos">
         <h3>{{title}}</h3>
         <p>By {{creator}}</p>
         <p>{{description}}</p>
         <p>Genres : {{genres}}</p>
       </div>
-      <table align="center" class="playlist_table">
+      <table align="center" class="playlist_table" id='songTable'>
         <thead>
           <tr align="center">
             <th width="5%"></th>
@@ -51,8 +51,8 @@
             <tr>
               <td>
                 <button class="btn btn-default mx-auto d-block">
-                  <a href="https://www.youtube.com/embed/{{vid_id}}" target="song_player">
-                    <img src="../img/play-button.png" alt="play button" width="16px" height="16px" id="play_button">
+                  <a id='{{vid_id}}' target="player">
+                    <img src="../img/play-button.png" alt="play button" width="16px" height="16px" id="{{vid_id}}">
                   </a>
                 </button>
               </td>
@@ -68,4 +68,59 @@
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-</html>
+  <script src="ytb.js"></script>
+
+  <script type="text/javascript">
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+    var ids = getvidID();
+    var i = 0;
+    for(j=0; j<ids.length; j++){
+      let button = document.getElementById(ids[j]);
+      button.addEventListener("click", function(){
+        i = ids.indexOf(button.id);
+        player.loadVideoById(ids[i]);
+        player.playVideo();
+      });
+    }
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '250',
+        width: '320',
+        videoId : ids[0],
+        events: {
+          'onReady' : onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+    function onPlayerReady(event){
+    }
+    function onPlayerStateChange(event) {
+      if (event.data == 0){
+        i++;
+        if(i>=ids.length){
+          i = 0;
+        }
+        player.loadVideoById(ids[i]);
+        player.playVideo();
+      }
+    }
+    function stopVideo() {
+      player.stopVideo();
+    }
+
+    function getvidID(){
+      var as = document.getElementsByTagName('a');
+      var ids = []
+      for(i=3;i<as.length; i++){
+        ids.push(as[i].id);
+      }
+      return ids;
+    }
+  </script>
+  </html>

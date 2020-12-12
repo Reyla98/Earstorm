@@ -297,7 +297,7 @@ label sm{
   padding-bottom:10px;
 }
 
-#song_player {
+.player {
   float:right;
   padding-bottom: 10px;
   padding-left: 10px;
