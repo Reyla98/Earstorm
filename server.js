@@ -216,10 +216,6 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			}
 		});
 
-		app.get('/login', function(req, res) {
-			res.render("login.html");
-		});
-
 		app.get('/account', function(req, res) {
 			if (req.session.username == null){
 				return res.render('login.html', {disconnectedErrorMessage:"Please log in to access your account."});
@@ -235,6 +231,10 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 					res.render("account.html", {"playlist_list": doc, username: req.session.username});
 				}
 			});
+		});
+		
+		app.get('/login', function(req, res) {
+			res.render("login.html");
 		});
 
 		app.post('/login', function(req, res) {
@@ -589,6 +589,21 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 						              pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"};
 						res.render('homepage.html', newDoc);
 					}
+				}
+			});
+		});
+		
+		app.get('/user_playlists', function(req, res) {
+			let creator = req.query.creator;
+			dbo.collection('playlists').find({creator:creator}).toArray(function(err, doc) {
+				if (err) throw err;
+				doc = getAllDates(doc);
+				if (req.session.username != null){
+					res.render("user_playlists.html", {"playlist_list": doc, username: req.session.username,
+					                                   pl_title:"Title", pl_descr:"Description", pl_creator:creator, pl_created:"Created on", pl_modified:"Last modified on"});
+				} else {
+					res.render("user_playlists.html", {"playlist_list": doc, login: "Log in",
+					                                   pl_title:"Title", pl_descr:"Description", pl_creator:creator, pl_created:"Created on", pl_modified:"Last modified on"});
 				}
 			});
 		});
