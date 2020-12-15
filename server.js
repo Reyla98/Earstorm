@@ -42,16 +42,17 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			req.session.search = null;
 			dbo.collection('playlists').find({}).toArray(function(err, doc) {
 				if (err) throw err;
+				req.session.search = doc;
 				for (let playlist of doc) {
 					playlist.modification_date = getFullDate(playlist.modification_date);
 					playlist.creation_date = getFullDate(playlist.creation_date);
 				}
 				if (req.session.username != null) {
-					let newDoc = {"playlist_list": doc, username:req.session.username, title:doc.title,
+					let newDoc = {"playlist_list": doc, username:req.session.username,
 												 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
 					res.render("homepage.html", newDoc);
 				} else {
-					let newDoc = {"playlist_list": doc, login:"Log in", title:doc.title,
+					let newDoc = {"playlist_list": doc, login:"Log in",
 												 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
 					res.render('homepage.html', newDoc);
 				}
@@ -59,227 +60,202 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		});
 
 		app.get('/sort_titles', function(req, res) {
-			if (req.session.search == null){
-				if (req.session.sorting != "titles1"){
-					dbo.collection('playlists').find({}).sort({"title":1}).toArray(function(err, doc) {
-						if (err) throw err;
-						req.session.sorting = "titles1"
-						for (let playlist of doc) {
-							playlist.modification_date = getFullDate(playlist.modification_date);
-							playlist.creation_date = getFullDate(playlist.creation_date);
-						}
-						if (req.session.username != null) {
-							let newDoc = {"playlist_list": doc, username:req.session.username, title:doc.title,
-														 pl_title:"Title ˄", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
-							res.render("homepage.html", newDoc);
-						} else {
-								let newDoc = {"playlist_list": doc, login:"Log in", title:doc.title,
-															 pl_title:"Title ˄", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
-								res.render('homepage.html', newDoc);
-						}
-					});
+			if (req.session.sorting != "titles1"){
+				req.session.sorting = "titles1";
+				req.session.search = req.session.search.sort(function (a, b) {
+					return a.title - b.title;
+				});
+				let doc = req.session.search;
+				for (let playlist of doc) {
+					playlist.modification_date = getFullDate(playlist.modification_date);
+					playlist.creation_date = getFullDate(playlist.creation_date);
+				}
+				if (req.session.username != null) {
+					let newDoc = {"playlist_list": doc, username:req.session.username,
+												 pl_title:"Title ˄", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
+					res.render("homepage.html", newDoc);
 				} else {
-					dbo.collection('playlists').find({}).sort({"title":-1}).toArray(function(err, doc) {
-						if (err) throw err;
-						req.session.sorting = "titles-1"
-						for (let playlist of doc) {
-							playlist.modification_date = getFullDate(playlist.modification_date);
-							playlist.creation_date = getFullDate(playlist.creation_date);
-						}
-						if (req.session.username != null) {
-							let newDoc = {"playlist_list": doc, username:req.session.username, title:doc.title,
-														 pl_title:"Title ˅", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
-							res.render("homepage.html", newDoc);
-						} else {
-								let newDoc = {"playlist_list": doc, login:"Log in", title:doc.title,
-															 pl_title:"Title ˅", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
-								res.render('homepage.html', newDoc);
-						}
-					});
+						let newDoc = {"playlist_list": doc, login:"Log in",
+													 pl_title:"Title ˄", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
+						res.render('homepage.html', newDoc);
 				}
 			} else {
-			//sort search results
-			//TO DO
+				req.session.sorting = "titles-1";
+				req.session.search = req.session.search.reverse();
+				let doc = req.session.search;
+				for (let playlist of doc) {
+					playlist.modification_date = getFullDate(playlist.modification_date);
+					playlist.creation_date = getFullDate(playlist.creation_date);
+				}
+				if (req.session.username != null) {
+					let newDoc = {"playlist_list": doc, username:req.session.username,
+												 pl_title:"Title ˅", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
+					res.render("homepage.html", newDoc);
+				} else {
+						let newDoc = {"playlist_list": doc, login:"Log in",
+													 pl_title:"Title ˅", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
+						res.render('homepage.html', newDoc);
+				}
 			}
 		});
 
 		app.get('/sort_description', function(req, res) {
-			if (req.session.search == null){
-				if (req.session.sorting != "description1"){
-					dbo.collection('playlists').find({}).sort({"description":1}).toArray(function(err, doc) {
-						if (err) throw err;
-						req.session.sorting = "description1"
-						for (let playlist of doc) {
-							playlist.modification_date = getFullDate(playlist.modification_date);
-							playlist.creation_date = getFullDate(playlist.creation_date);
-						}
-						if (req.session.username != null) {
-							let newDoc = {"playlist_list": doc, username:req.session.username, title:doc.title,
-														 pl_title:"Title", pl_descr:"Description ˄", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
-							res.render("homepage.html", newDoc);
-						} else {
-							let newDoc = {"playlist_list": doc, login:"Log in", title:doc.title,
-														 pl_title:"Title", pl_descr:"Description ˄", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
-							res.render('homepage.html', newDoc);
-						}
-					});
-				} else {
-					dbo.collection('playlists').find({}).sort({"description":-1}).toArray(function(err, doc) {
-						if (err) throw err;
-						req.session.sorting = "description-1"
-						for (let playlist of doc) {
-							playlist.modification_date = getFullDate(playlist.modification_date);
-							playlist.creation_date = getFullDate(playlist.creation_date);
-						}
-						if (req.session.username != null) {
-							let newDoc = {"playlist_list": doc, username:req.session.username, title:doc.title,
-														 pl_title:"Title", pl_descr:"Description ˅", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
-							res.render("homepage.html", newDoc);
-						} else {
-							let newDoc = {"playlist_list": doc, login:"Log in", title:doc.title,
-														 pl_title:"Title", pl_descr:"Description ˅", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
-							res.render('homepage.html', newDoc);
-						}
-					});
+			if (req.session.sorting != "description1"){
+				req.session.sorting = "description1";
+				req.session.search = req.session.search.sort(function (a, b) {
+					return a.description - b.description;
+				});
+				let doc = req.session.search;
+				for (let playlist of doc) {
+					playlist.modification_date = getFullDate(playlist.modification_date);
+					playlist.creation_date = getFullDate(playlist.creation_date);
 				}
-			} else {
-			//sort search results
-			// TO DO
+				if (req.session.username != null) {
+					let newDoc = {"playlist_list": doc, username:req.session.username,
+												 pl_title:"Title", pl_descr:"Description ˄", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
+					res.render("homepage.html", newDoc);
+				} else {
+					let newDoc = {"playlist_list": doc, login:"Log in",
+												 pl_title:"Title", pl_descr:"Description ˄", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
+					res.render('homepage.html', newDoc);
+				}
+			} else {				
+				req.session.sorting = "description-1";
+				req.session.search = req.session.search.reverse();
+				let doc = req.session.search;
+				for (let playlist of doc) {
+					playlist.modification_date = getFullDate(playlist.modification_date);
+					playlist.creation_date = getFullDate(playlist.creation_date);
+				}
+				if (req.session.username != null) {
+					let newDoc = {"playlist_list": doc, username:req.session.username,
+												 pl_title:"Title", pl_descr:"Description ˅", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
+					res.render("homepage.html", newDoc);
+				} else {
+					let newDoc = {"playlist_list": doc, login:"Log in",
+												 pl_title:"Title", pl_descr:"Description ˅", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
+					res.render('homepage.html', newDoc);
+				}
 			}
 		});
 
 		app.get('/sort_creator', function(req, res) {
-			if (req.session.search == null){
-				if (req.session.sorting != "creator1"){
-					dbo.collection('playlists').find({}).sort({"creator":1}).toArray(function(err, doc) {
-						if (err) throw err;
-						req.session.sorting = "creator1"
-						for (let playlist of doc) {
-							playlist.modification_date = getFullDate(playlist.modification_date);
-							playlist.creation_date = getFullDate(playlist.creation_date);
-						}
-						if (req.session.username != null) {
-							let newDoc = {"playlist_list": doc, username:req.session.username, title:doc.title,
-														 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator ˄", pl_created:"Created on", pl_modified:"Last modified on"}
-							res.render("homepage.html", newDoc);
-						} else {
-							let newDoc = {"playlist_list": doc, login:"Log in", title:doc.title,
-														 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator ˄", pl_created:"Created on", pl_modified:"Last modified on"}
-							res.render('homepage.html', newDoc);
-						}
-					});
+			if (req.session.sorting != "creator1"){
+				req.session.sorting = "creator1";
+				req.session.search = req.session.search.sort(function (a, b) {
+					return a.creator - b.creator;
+				});
+				let doc = req.session.search;
+				for (let playlist of doc) {
+					playlist.modification_date = getFullDate(playlist.modification_date);
+					playlist.creation_date = getFullDate(playlist.creation_date);
+				}
+				if (req.session.username != null) {
+					let newDoc = {"playlist_list": doc, username:req.session.username,
+												 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator ˄", pl_created:"Created on", pl_modified:"Last modified on"}
+					res.render("homepage.html", newDoc);
 				} else {
-					dbo.collection('playlists').find({}).sort({"creator":-1}).toArray(function(err, doc) {
-						if (err) throw err;
-						req.session.sorting = "creator-1"
-						for (let playlist of doc) {
-							playlist.modification_date = getFullDate(playlist.modification_date);
-							playlist.creation_date = getFullDate(playlist.creation_date);
-						}
-						if (req.session.username != null) {
-							let newDoc = {"playlist_list": doc, username:req.session.username, title:doc.title,
-														 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator ˅", pl_created:"Created on", pl_modified:"Last modified on"}
-							res.render("homepage.html", newDoc);
-						} else {
-							let newDoc = {"playlist_list": doc, login:"Log in", title:doc.title,
-														 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator ˅", pl_created:"Created on", pl_modified:"Last modified on"}
-							res.render('homepage.html', newDoc);
-						}
-					});
+					let newDoc = {"playlist_list": doc, login:"Log in",
+												 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator ˄", pl_created:"Created on", pl_modified:"Last modified on"}
+					res.render('homepage.html', newDoc);
 				}
 			} else {
-				//sort search results
-				//TO DO
+				req.session.sorting = "creator-1";
+				req.session.search = req.session.search.reverse();
+				let doc = req.session.search;
+				for (let playlist of doc) {
+					playlist.modification_date = getFullDate(playlist.modification_date);
+					playlist.creation_date = getFullDate(playlist.creation_date);
+				}
+				if (req.session.username != null) {
+					let newDoc = {"playlist_list": doc, username:req.session.username,
+												 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator ˅", pl_created:"Created on", pl_modified:"Last modified on"}
+					res.render("homepage.html", newDoc);
+				} else {
+					let newDoc = {"playlist_list": doc, login:"Log in",
+												 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator ˅", pl_created:"Created on", pl_modified:"Last modified on"}
+					res.render('homepage.html', newDoc);
+				}
 			}
 		});
 
 		app.get('/sort_created', function(req, res) {
-			if (req.session.search == null){
-				if (req.session.sorting != "created1"){
-					dbo.collection('playlists').find({}).sort({"creation_date":1}).toArray(function(err, doc) {
-						if (err) throw err;
-						req.session.sorting = "created1"
-						for (let playlist of doc) {
-							playlist.modification_date = getFullDate(playlist.modification_date);
-							playlist.creation_date = getFullDate(playlist.creation_date);
-						}
-						if (req.session.username != null) {
-							let newDoc = {"playlist_list": doc, username:req.session.username, title:doc.title,
-														 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on ˄", pl_modified:"Last modified on"}
-							res.render("homepage.html", newDoc);
-						} else {
-							let newDoc = {"playlist_list": doc, login:"Log in", title:doc.title,
-														 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on ˄", pl_modified:"Last modified on"}
-							res.render('homepage.html', newDoc);
-						}
-					});
+			if (req.session.sorting != "created1"){
+				req.session.sorting = "created1"
+				req.session.search = req.session.search.sort(function (a, b) {
+					return a.creation_date - b.creation_date;
+				});
+				let doc = req.session.search;
+				for (let playlist of doc) {
+					playlist.modification_date = getFullDate(playlist.modification_date);
+					playlist.creation_date = getFullDate(playlist.creation_date);
+				}
+				if (req.session.username != null) {
+					let newDoc = {"playlist_list": doc, username:req.session.username,
+												 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on ˄", pl_modified:"Last modified on"}
+					res.render("homepage.html", newDoc);
 				} else {
-					dbo.collection('playlists').find({}).sort({"creation_date":-1}).toArray(function(err, doc) {
-						if (err) throw err;
-						req.session.sorting = "created-1"
-						for (let playlist of doc) {
-							playlist.modification_date = getFullDate(playlist.modification_date);
-							playlist.creation_date = getFullDate(playlist.creation_date);
-						}
-						if (req.session.username != null) {
-							let newDoc = {"playlist_list": doc, username:req.session.username, title:doc.title,
-														 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on ˅", pl_modified:"Last modified on"}
-							res.render("homepage.html", newDoc);
-						} else {
-							let newDoc = {"playlist_list": doc, login:"Log in", title:doc.title,
-														 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on ˅", pl_modified:"Last modified on"}
-							res.render('homepage.html', newDoc);
-						}
-					});
+					let newDoc = {"playlist_list": doc, login:"Log in",
+												 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on ˄", pl_modified:"Last modified on"}
+					res.render('homepage.html', newDoc);
 				}
 			} else {
-				//sort search results
-				// TO DO
+				req.session.sorting = "created-1"
+				req.session.search = req.session.search.reverse();
+				let doc = req.session.search;
+				for (let playlist of doc) {
+					playlist.modification_date = getFullDate(playlist.modification_date);
+					playlist.creation_date = getFullDate(playlist.creation_date);
+				}
+				if (req.session.username != null) {
+					let newDoc = {"playlist_list": doc, username:req.session.username,
+												 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on ˅", pl_modified:"Last modified on"}
+					res.render("homepage.html", newDoc);
+				} else {
+					let newDoc = {"playlist_list": doc, login:"Log in",
+												 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on ˅", pl_modified:"Last modified on"}
+					res.render('homepage.html', newDoc);
+				}
 			}
 		});
 
 		app.get('/sort_modified', function(req, res) {
-			if (req.session.search == null){
-				if (req.session.sorting != "modified1"){
-					dbo.collection('playlists').find({}).sort({"modification_date":1}).toArray(function(err, doc) {
-						if (err) throw err;
-						req.session.sorting = "modified1"
-						for (let playlist of doc) {
-							playlist.modification_date = getFullDate(playlist.modification_date);
-							playlist.creation_date = getFullDate(playlist.creation_date);
-						}
-						if (req.session.username != null) {
-							let newDoc = {"playlist_list": doc, username:req.session.username, title:doc.title,
-														 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on ˄"}
-							res.render("homepage.html", newDoc);
-						} else {
-							let newDoc = {"playlist_list": doc, login:"Log in", title:doc.title,
-														 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on ˄"}
-							res.render('homepage.html', newDoc);
-						}
-					});
+			if (req.session.sorting != "modified1"){
+				req.session.sorting = "modified1"
+				req.session.search = req.session.search.sort(function (a, b) {
+					return a.modification_date - b.modification_date;
+				});
+				let doc = req.session.search;
+				for (let playlist of doc) {
+					playlist.modification_date = getFullDate(playlist.modification_date);
+					playlist.creation_date = getFullDate(playlist.creation_date);
+				}
+				if (req.session.username != null) {
+					let newDoc = {"playlist_list": doc, username:req.session.username,
+												 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on ˄"}
+					res.render("homepage.html", newDoc);
 				} else {
-					dbo.collection('playlists').find({}).sort({"modification_date":-1}).toArray(function(err, doc) {
-						if (err) throw err;
-						req.session.sorting = "modified-1"
-						for (let playlist of doc) {
-							playlist.modification_date = getFullDate(playlist.modification_date);
-							playlist.creation_date = getFullDate(playlist.creation_date);
-						}
-						if (req.session.username != null) {
-							let newDoc = {"playlist_list": doc, username:req.session.username, title:doc.title,
-														 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on ˅"}
-							res.render("homepage.html", newDoc);
-						} else {
-							let newDoc = {"playlist_list": doc, login:"Log in", title:doc.title,
-														 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on ˅"}
-							res.render('homepage.html', newDoc);
-						}
-					});
+					let newDoc = {"playlist_list": doc, login:"Log in",
+												 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on ˄"}
+					res.render('homepage.html', newDoc);
 				}
 			} else {
-				//sort search results
-				// TO DO
+				req.session.sorting = "modified-1"
+				req.session.search = req.session.search.reverse();
+				let doc = req.session.search;
+				for (let playlist of doc) {
+					playlist.modification_date = getFullDate(playlist.modification_date);
+					playlist.creation_date = getFullDate(playlist.creation_date);
+				}
+				if (req.session.username != null) {
+					let newDoc = {"playlist_list": doc, username:req.session.username,
+												 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on ˅"}
+					res.render("homepage.html", newDoc);
+				} else {
+					let newDoc = {"playlist_list": doc, login:"Log in",
+												 pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on ˅"}
+					res.render('homepage.html', newDoc);
+				}
 			}
 		});
 
@@ -568,12 +544,21 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 					} else {
 							res.render('homepage.html', {login: "Log in", nomatchErrorMessage: "No match found"});
 					}
-				} else if (req.session.username != null) {
-					let newDoc = {"playlist_list": doc, username: req.session.username};
-					res.render('homepage.html', newDoc);
 				} else {
-					let newDoc = {"playlist_list": doc, login: "Log in"};
-					res.render('homepage.html', newDoc);
+					req.session.search = doc;
+					for (let playlist of doc) {
+						playlist.modification_date = getFullDate(playlist.modification_date);
+						playlist.creation_date = getFullDate(playlist.creation_date);
+					}
+					if (req.session.username != null) {
+						let newDoc = {"playlist_list": doc, username: req.session.username,
+						              pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"};
+						res.render('homepage.html', newDoc);
+					} else {
+						let newDoc = {"playlist_list": doc, login: "Log in",
+						              pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"};
+						res.render('homepage.html', newDoc);
+					}
 				}
 			});
 		});
@@ -583,7 +568,6 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		})
 
 		app.post('/advancedSearch', function(req, res) {
-
 			console.log(req.body.description);
 			if (req.body.description == "") { req.body.description = " "; }
 			if (req.body.title == "") { req.body.title = " "; }
@@ -635,11 +619,18 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 							}
 						}
 					});
+					req.session.search = doc;
+					for (let playlist of doc) {
+						playlist.modification_date = getFullDate(playlist.modification_date);
+						playlist.creation_date = getFullDate(playlist.creation_date);
+					}
 					if (req.session.username != null) {
-						let newDoc = {"playlist_list": doc, username: req.session.username};
+						let newDoc = {"playlist_list": doc, username: req.session.username,
+													pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"};
 						res.render('homepage.html', newDoc);
 					} else {
-						let newDoc = {"playlist_list": doc, login: "Log in"};
+						let newDoc = {"playlist_list": doc, login: "Log in",
+						              pl_title:"Title", pl_descr:"Description", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"};
 						res.render('homepage.html', newDoc);
 					}
 				}
