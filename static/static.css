@@ -140,6 +140,7 @@ nav {
 
 /* tables */
 .container table tbody tr td a{
+	font-weight:bolder;
   text-decoration: none;
   color:white;
 }
