@@ -585,24 +585,10 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		app.post('/advancedSearch', function(req, res) {
 
 			console.log(req.body.description);
-			if (req.body.description == "") { req.body.description = " " }
-			if (req.body.title == "") { req.body.title = " " }
-			if (req.body.genre == "") { req.body.genre = " " }
-			if (req.body.creator == "") { req.body.creator = " " }
-			if (req.body.created_from == "") {
-				req.body.created_from = new Date(0);
-			} else { req.body.created_from = new Date(req.body.created_from); }
-			if (req.body.modified_from == "") {
-				req.body.modified_from = new Date(0);
-			} else { req.body.modified_from = new Date(req.body.modified_from); }
-			if (req.body.created_until == "") {
-				req.body.created_until = new Date(2999, 12, 31);
-			} else { req.body.created_until = new Date(req.body.created_until); }
-			if (req.body.modified_until == "") {
-				req.body.modified_until = new Date(2999, 12, 31);
-			} else { req.body.modified_until = new Date(req.body.modified_until); }
-			console.log(req.body.created_until);
-
+			if (req.body.description == "") { req.body.description = " "; }
+			if (req.body.title == "") { req.body.title = " "; }
+			if (req.body.genre == "") { req.body.genre = " "; }
+			if (req.body.creator == "") { req.body.creator = " "; }
 			dbo.collection('playlists').aggregate([{$search:
 				{
 					"compound": {
@@ -624,19 +610,6 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 								"path": ["creator"],
 								"fuzzy": {}
 							}
-	//					}],
-	//					"must": [{
-	//						"range": {
-	//							"path": ["creation_date"],
-	//							"gte": req.body.created_from,
-	//							"lte": req.body.created_until
-	//						}
-	//					}, {
-	//						"range": {
-	//							"path": ["modification_date"],
-	//							"gte": req.body.modified_from,
-	//							"lte": req.body.modified_until
-	//						}
 						}]
 					}
 				}
@@ -648,12 +621,27 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 					} else {
 						res.render('homepage.html', {login: "Log in", nomatchErrorMessage: "No match found"});
 					}
-				} else if (req.session.username != null) {
-					let newDoc = {"playlist_list": doc, username: req.session.username};
-					res.render('homepage.html', newDoc);
 				} else {
-					let newDoc = {"playlist_list": doc, login: "Log in"};
-					res.render('homepage.html', newDoc);
+					doc.forEach(function(item, index, array) {
+						if (req.body.created_from != "" | req.body.created_until != "" | req.body.modified_from != "" | req.body.modified_until != ""){
+							if (item.creation_date < new Date(req.body.created_from)){
+								doc.splice(index,1);
+							} else if (item.creation_date > new Date(req.body.created_until)){
+								doc.splice(index,1);
+							} else if (item.modification_date < new Date(req.body.modified_from)){
+								doc.splice(index,1);
+							} else if (item.modification_date > new Date(req.body.modified_until)){
+								doc.splice(index,1);
+							}
+						}
+					});
+					if (req.session.username != null) {
+						let newDoc = {"playlist_list": doc, username: req.session.username};
+						res.render('homepage.html', newDoc);
+					} else {
+						let newDoc = {"playlist_list": doc, login: "Log in"};
+						res.render('homepage.html', newDoc);
+					}
 				}
 			});
 		});
