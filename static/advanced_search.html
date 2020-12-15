@@ -33,26 +33,34 @@
         <div class="container">
           <h4>Advanced search</h4>
           <p class="error_message">{{searchErrorMessage}}</p>
-          <form action="advsearch" method="get" name="advsearch">
+          <form action="advancedSearch" method="post" name="advancedSearch">
             <div class="form-group">
-              <label for="playlist_descr">playlist description:</label>
-              <input class="form-control" placeholder="Search for words in the description" id="playlist_descr" name="playlist_descr">
+              <label for="title">Playlist title:</label>
+              <input class="form-control" placeholder="Search for words in the title" id="playlist_title" name="title">
             </div>
             <div class="form-group">
-              <label for="playlist_genre">playlist genre:</label>
-              <input class="form-control" placeholder="Search for a specific genre" id="playlist_genre" name="playlist_genre">
+              <label for="description">Playlist description:</label>
+              <input class="form-control" placeholder="Search for words in the description" id="playlist_description" name="description">
             </div>
             <div class="form-group">
-              <label for="playlist_creator">Created by:</label>
+              <label for="creator">Created by:</label>
               <input class="form-control" placeholder="Search for a specific username" id="creator" name="creator">
             </div>
             <div class="form-group">
-              <label for="playlist_date_from">Created after:</label>
-              <input type="date" class="form-control" placeholder="Search for a specific date" name="playlist_date_from">
+              <label for="created_from">Created after:</label>
+              <input type="date" class="form-control" placeholder="Search for a specific date" name="created_from">
             </div>
             <div class="form-group">
-              <label for="playlist_date_until">Created before:</label>
-              <input type="date" class="form-control" placeholder="Search for a specific date" name="playlist_date_until">
+              <label for="created_until">Created before:</label>
+              <input type="date" class="form-control" placeholder="Search for a specific date" name="created_until">
+            </div>
+            <div class="form-group">
+              <label for="modified_from">Modified after:</label>
+              <input type="date" class="form-control" placeholder="Search for a specific date" name="modified_from">
+            </div>
+            <div class="form-group">
+              <label for="modified_until">Modified before:</label>
+              <input type="date" class="form-control" placeholder="Search for a specific date" name="modified_until">
             </div>
             <button type="submit" class="btn btn-primary">Search</button>
           </form>

@@ -17,7 +17,7 @@ const app = express();
 app.use(session({secret:'earstorm123', resave: true, saveUninitialized: false}));
 /*
 J'ai ajouté les options resave & saveUninitialized pour retirer le 'deprecation warning' au lancement du serveur...
-Mais je ne suis pas certaine pour les valeurs, je me suis basée sur ce que j'ai lu ici: 
+Mais je ne suis pas certaine pour les valeurs, je me suis basée sur ce que j'ai lu ici:
 https://stackoverflow.com/questions/40381401/when-to-use-saveuninitialized-and-resave-in-express-session
 https://github.com/expressjs/session#options
 */
@@ -57,7 +57,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				}
 			});
 		});
-			
+
 		app.get('/sort_titles', function(req, res) {
 			if (req.session.search == null){
 				if (req.session.sorting != "titles1"){
@@ -102,7 +102,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			//TO DO
 			}
 		});
-			
+
 		app.get('/sort_description', function(req, res) {
 			if (req.session.search == null){
 				if (req.session.sorting != "description1"){
@@ -142,12 +142,12 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 						}
 					});
 				}
-			} else { 
+			} else {
 			//sort search results
 			// TO DO
 			}
 		});
-			
+
 		app.get('/sort_creator', function(req, res) {
 			if (req.session.search == null){
 				if (req.session.sorting != "creator1"){
@@ -192,7 +192,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				//TO DO
 			}
 		});
-		
+
 		app.get('/sort_created', function(req, res) {
 			if (req.session.search == null){
 				if (req.session.sorting != "created1"){
@@ -237,7 +237,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				// TO DO
 			}
 		});
-		
+
 		app.get('/sort_modified', function(req, res) {
 			if (req.session.search == null){
 				if (req.session.sorting != "modified1"){
@@ -282,7 +282,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				// TO DO
 			}
 		});
-		
+
 		app.get('/login', function(req, res) {
 			res.render("login.html");
 		});
@@ -388,7 +388,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				playlist_info['pageheader'] = 'Modify your playlist';
 				playlist_info['saveplaylist'] = "Save changes";
 				playlist_info['deleteplaylist'] = "or delete this playlist";
-				
+
 				res.render('create_playlist.html', playlist_info);
 			});
 		});
@@ -540,7 +540,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				}
 			})
 		});
-			
+
 		app.get('/deletePlaylist', function(req, res) {
 			let id = req.session.playlist_id;
 			req.session.playlist_id = null;
@@ -554,7 +554,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 
 		app.get('/searchplaylist', function(req, res) {
 			dbo.collection('playlists').aggregate([{$search:
-				{"text": 
+				{"text":
 					{"query": req.query.search_words,
 					 "path": ["description", "creator", "title", "genres"],
 					 "fuzzy": {}
@@ -567,6 +567,86 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 							res.render('homepage.html', {username: req.session.username, nomatchErrorMessage: "No match found"});
 					} else {
 							res.render('homepage.html', {login: "Log in", nomatchErrorMessage: "No match found"});
+					}
+				} else if (req.session.username != null) {
+					let newDoc = {"playlist_list": doc, username: req.session.username};
+					res.render('homepage.html', newDoc);
+				} else {
+					let newDoc = {"playlist_list": doc, login: "Log in"};
+					res.render('homepage.html', newDoc);
+				}
+			});
+		});
+
+		app.get('/advancedSearch', function(req, res) {
+			res.render('advanced_search.html');
+		})
+
+		app.post('/advancedSearch', function(req, res) {
+
+			console.log(req.body.description);
+			if (req.body.description == "") { req.body.description = " " }
+			if (req.body.title == "") { req.body.title = " " }
+			if (req.body.genre == "") { req.body.genre = " " }
+			if (req.body.creator == "") { req.body.creator = " " }
+			if (req.body.created_from == "") {
+				req.body.created_from = new Date(0);
+			} else { req.body.created_from = new Date(req.body.created_from); }
+			if (req.body.modified_from == "") {
+				req.body.modified_from = new Date(0);
+			} else { req.body.modified_from = new Date(req.body.modified_from); }
+			if (req.body.created_until == "") {
+				req.body.created_until = new Date(2999, 12, 31);
+			} else { req.body.created_until = new Date(req.body.created_until); }
+			if (req.body.modified_until == "") {
+				req.body.modified_until = new Date(2999, 12, 31);
+			} else { req.body.modified_until = new Date(req.body.modified_until); }
+			console.log(req.body.created_until);
+
+			dbo.collection('playlists').aggregate([{$search:
+				{
+					"compound": {
+						"should": [{
+							"text": {
+								"query": req.body.description,
+								"path": ["description"],
+								"fuzzy": {}
+							}
+						}, {
+							"text": {
+								"query": req.body.title,
+								"path": ["title"],
+								"fuzzy": {}
+							}
+						}, {
+							"text": {
+								"query": req.body.creator,
+								"path": ["creator"],
+								"fuzzy": {}
+							}
+	//					}],
+	//					"must": [{
+	//						"range": {
+	//							"path": ["creation_date"],
+	//							"gte": req.body.created_from,
+	//							"lte": req.body.created_until
+	//						}
+	//					}, {
+	//						"range": {
+	//							"path": ["modification_date"],
+	//							"gte": req.body.modified_from,
+	//							"lte": req.body.modified_until
+	//						}
+						}]
+					}
+				}
+			}]).toArray((err, doc) => {
+				if (err) throw err;
+				if (doc.length == 0) {
+					if (req.session.username != null) {
+						res.render('homepage.html', {username: req.session.username, nomatchErrorMessage: "No match found"});
+					} else {
+						res.render('homepage.html', {login: "Log in", nomatchErrorMessage: "No match found"});
 					}
 				} else if (req.session.username != null) {
 					let newDoc = {"playlist_list": doc, username: req.session.username};
@@ -602,19 +682,24 @@ function getFullDate(d) {
     let months = ["January", "February", "March", "April", "May", "June", "July", "Augustus", "September", "October", "November", "December"]
     let fullDate = months[date.getMonth()] + " " + date.getDate() + ", "+ date.getFullYear();
     return fullDate;
-  }
+}
 
 function get_id(url){
-		let id = null;
-		if (url.includes("youtube") || url.includes("youtu.be")){
-			id = (getVideoId(url)).id;
-		}
-		return id;
-  }
-	
-	function arrayRemove(arr, value) { 
-		return arr.filter(function(ele){ 
-				return ele != value; 
-		});
-  }
-		
+	let id = null;
+	if (url.includes("youtube") || url.includes("youtu.be")){
+		id = (getVideoId(url)).id;
+	}
+	return id;
+}
+
+function arrayRemove(arr, value) {
+	return arr.filter(function(ele){
+			return ele != value;
+	});
+}
+
+function IOSDate(date) {
+	return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate()
+	+ " " + date.getHours() + ":" + date.getMinutes() + "." + date.getSeconds()
+	+ "." + date.getMilliseconds()
+}
