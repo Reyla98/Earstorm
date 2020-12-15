@@ -71,18 +71,18 @@
         <thead>
           <tr align="center">
             <th width="5%"></th>
-            <th width="15%"><a class="home-link link"  href="/sort_titles">{{pl_title}}</a></th>
-            <th width="24%"><a class="home-link link"  href="/sort_description">{{pl_descr}}</a></th>
-            <th width="10%"><a class="home-link link"  href="/sort_creator">{{pl_creator}}</a></th>
-            <th width="18%"><a class="home-link link"  href="/sort_created">{{pl_created}}</a></th>
-            <th width="18%"><a class="home-link link"  href="/sort_modified">{{pl_modified}}</a></th>
+            <th width="15%"><a class="sort-link link"  href="/sort_titles">{{pl_title}}</a></th>
+            <th width="24%"><a class="sort-link link"  href="/sort_description">{{pl_descr}}</a></th>
+            <th width="10%"><a class="sort-link link"  href="/sort_creator">{{pl_creator}}</a></th>
+            <th width="18%"><a class="sort-link link"  href="/sort_created">{{pl_created}}</a></th>
+            <th width="18%"><a class="sort-link link"  href="/sort_modified">{{pl_modified}}</a></th>
         </thead>
         <tbody>
           </tr>
 
           {{#playlist_list}}
           <tr>
-            <td>{{picture}}</td><td><a href="/playlist_content?id={{_id}}">{{title}}</a></td><td class="ellipsis" title="{{description}}">{{description}}</td><td><a href="/user_playlists?creator={{creator}}">{{creator}}</td><td>{{creation_date}}</td><td>{{modification_date}}</td>
+            <td>{{picture}}</td><td><a href="/playlist_content?id={{_id}}">{{title}}</a></td><td class="ellipsis" title="{{description}}">{{description}}</td><td><a href="/user_playlists?creator={{}}">{{creator}}</td><td>{{creation_date}}</td><td>{{modification_date}}</td>
           </tr>
           {{/playlist_list}}
         </tbody>
