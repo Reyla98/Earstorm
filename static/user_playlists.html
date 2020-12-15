@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>{{username}}</title>
+    <title>{{pl_creator}}'s playlists</title>
     <link rel="shortcut icon" href="/img/logo.png">
     <link rel="stylesheet" href="static.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
@@ -17,6 +17,9 @@
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <a class="nav-link link"  href="/account">{{username}}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link link" href="/login">{{login}}</a>
           </li>
         </ul>
         <form action="searchplaylist" class="form-inline my-2 my-lg-0" method="get">
