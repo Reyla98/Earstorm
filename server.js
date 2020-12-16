@@ -358,24 +358,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				let songs = [];
 				for (let url of urls){
 					if (url != ""){
-						let vid_id = get_id(url);
-						let vid_title = url;
-						let vid_length = null;
-						if (vid_id != null){
-							let API_url = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=" + vid_id + "&key=AIzaSyDWSwITRSdspIeaC5upd9oZ6cE0z8b-bi4";
-							let API_data;
-							var request = new XMLHttpRequest();
-							request.open('GET', API_url, false);
-							request.send(null);
-							if (request.status === 200) {
-								API_data = request.responseText;
-							}
-							vid_title = API_data.replace(/"/g, "").replace("title: ", "").replace(/\n/g, "").replace(/  +/g, "").split(',');
-							vid_title = vid_title[7];
-							vid_length = API_data.replace(/"/g, "").replace("duration: ", "").replace(/\n/g, "").replace(/  +/g, "").replace(/,dimension:.*/, "").split('{');
-							vid_length = vid_length[11];
-						}
-						songs.push({'url': url, 'date': new Date(), 'vid_id': vid_id, 'vid_title': vid_title, 'vid_length': vid_length});
+						let vid_info = get_info(url);
+						songs.push(vid_info);
 					}
 				}
 				let playlist_info = {
@@ -407,24 +391,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 					}
 					for (let url of urls) {
 						if (! urls_already_in.includes(url) && url != "") {
-							let vid_id = get_id(url);
-							let vid_title = url;
-							let vid_length = null;
-							if (vid_id != null){
-								let API_url = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=" + vid_id + "&key=AIzaSyDWSwITRSdspIeaC5upd9oZ6cE0z8b-bi4";
-								let API_data;
-								var request = new XMLHttpRequest();
-								request.open('GET', API_url, false);
-								request.send(null);
-								if (request.status === 200) {
-									API_data = request.responseText;
-								}
-								vid_title = API_data.replace(/"/g, "").replace("title: ", "").replace(/\n/g, "").replace(/  +/g, "").split(',');
-								vid_title = vid_title[7];
-								vid_length = API_data.replace(/"/g, "").replace("duration: ", "").replace(/\n/g, "").replace(/  +/g, "").replace(/,dimension:.*/, "").split('{');
-								vid_length = vid_length[11];
-							}
-							songs.push({'url': url, 'date': new Date(), 'vid_id': vid_id, 'vid_title': vid_title, 'vid_length': vid_length});
+							let vid_info = get_info(url);
+							songs.push(vid_info);
 						}
 					}
 					var playlist_info = {
@@ -658,12 +626,68 @@ function getAllDates(doc){
 	return doc;
 }
 
-function get_id(url){
-	let id = null;
-	if (url.includes("youtube") || url.includes("youtu.be")){
-		id = (getVideoId(url)).id;
+function get_info(url){
+	let vid_id;
+	let source;
+	let embedded_video;
+	let vid_title = url;
+	let vid_length;
+	let play_title = "Play";
+	if (url.includes("youtube") | url.includes("youtu.be") | url.includes("vimeo")){
+		const info = getVideoId(url);
+		vid_id = info.id;
+		source = info.service;
+		if (source == "youtube"){
+			embedded_video = "https://www.youtube.com/embed/"+vid_id+"?autoplay=1";
+			let API_url = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=" + vid_id + "&key=AIzaSyDWSwITRSdspIeaC5upd9oZ6cE0z8b-bi4";
+			var request = new XMLHttpRequest();
+			request.open('GET', API_url, false);
+			request.send(null);
+			if (request.status === 200) {
+				let data = JSON.parse(request.responseText);
+				vid_title = data.items[0].snippet.title;
+				vid_length = data.items[0].contentDetails.duration;
+			} else {console.log('Error: could not complete http request. ERROR CODE: ',request.status);}
+		}
+		else if (source == "vimeo"){
+			embedded_video = "https://player.vimeo.com/video/"+vid_id+"?autoplay=1";
+			let API_url = "https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/"+vid_id;
+			var request = new XMLHttpRequest();
+			request.open('GET', API_url, false);
+			request.send(null);
+			if (request.status === 200) {
+				let data = JSON.parse(request.responseText);
+				vid_title = data.title;
+				vid_length = data.duration;
+			} else {console.log('Error: could not complete http request. ERROR CODE: ',request.status);}
+		}
 	}
-	return id;
+	else if (url.includes("dailymotion") | url.includes("dai.ly")){
+		source = "dailymotion";
+		if (url.includes("dailymotion")){
+			vid_id = url.replace(/.*video[/]/, "").replace(/[_?$#/].*/, "");
+		} else {
+			vid_id = url.replace(/.*dai.ly[/]/, "");
+		}
+		embedded_video = "https://www.dailymotion.com/embed/video/"+vid_id+"?autoplay=1";
+		let API_url = "https://api.dailymotion.com/video/"+vid_id+"?fields=title,duration";
+		var request = new XMLHttpRequest();
+		request.open('GET', API_url, false);
+		request.send(null);
+		if (request.status === 200) {
+			let data = JSON.parse(request.responseText);
+			console.log(data);
+			vid_title = data.title;
+			vid_length = data.duration;
+		} else {console.log('Error: could not complete http request. ERROR CODE: ',request.status);}
+	}
+	else if (url.includes("soundcloud")){
+		source = "soundcloud";
+		embedded_video = "https://w.soundcloud.com/player/?url="+url+"&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true";
+	}
+	if (embedded_video == null){play_title = "Listen to this song by clicking on the link provided in the title section";}
+	let vid_info = {"url":url, "date":new Date(), "vid_id":vid_id, "vid_title":vid_title, "vid_length":vid_length, "source":source, "embedded_video":embedded_video, "play_title":play_title};
+	return vid_info;
 }
 
 function arrayRemove(arr, value) {
