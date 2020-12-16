@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
 const https = require('https');
+const http = require('http');
 const fs = require('fs');
 const port = 8080;
 const session = require('express-session');
@@ -11,6 +12,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const getVideoId = require('get-video-id');
 const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var secured = false;
 
 //Set up server
 const app = express();
@@ -623,7 +625,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			req.session.username = null;
 			res.redirect('/homepage');
 		});
-
+		if(secured){
 		https.createServer({
 			key: fs.readFileSync('./key.pem'),
 			cert: fs.readFileSync('./cert.pem'),
@@ -631,6 +633,13 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		}, app).listen(port, function(){
 			console.log('Server running on port 8080')
 		});
+		}
+		else{
+			http.createServer({
+			}, app).listen(port, function(){
+				console.log('Server running on port 8080')
+			});
+		}
 
 	});
 
