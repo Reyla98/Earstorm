@@ -1,4 +1,4 @@
-const {Builder, By, Key, Util} = require('selenium-webdriver');
+const {Builder, By, Key, Util, until} = require('selenium-webdriver');
 const script = require('jest');
 const {beforeAll} = require('@jest/globals');
 const { underscore } = require('consolidate');
@@ -93,11 +93,7 @@ describe('Tests on EarStorm', function(){
         await accountBtn.click();
         let createPlaylistBtn = await driver.findElement(By.id('btnCreatePl'));
         await createPlaylistBtn.click();
-        await driver.wait(function() {
-            return driver.executeScript('return document.readyState').then(function(readyState) {
-              return readyState === 'complete';
-            });
-          });
+        await driver.wait(until.urlContains("addPlaylist"));
         let playlistNameField = await driver.findElement(By.name("playlist_name"));
         let songsUrlField = await driver.findElement(By.name("playlist_songs"));
         let metalCheckBox = await driver.findElement(By.id("metal"));
@@ -125,13 +121,6 @@ describe('Tests on EarStorm', function(){
         await expect(await driver.getCurrentUrl()).toBe(url+'account');
     });
     test('Playlist well added', async function(){
-        await driver.wait(function() {
-            return driver.executeScript('return document.readyState').then(function(readyState) {
-              return readyState === 'complete';
-            });
-          });
-        var table = driver.findElement(By.xpath('//*[@id="playlistTable"]/tbody/tr'));
-        console.log(table);
 
     });
 });
