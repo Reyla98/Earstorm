@@ -622,9 +622,10 @@ function getAllDates(doc){
 function get_info(url){
 	let vid_id = null;
 	let source = null;
-	let embedded_video = "Listen to this song by clicking on the link provided in the title section"
+	let embedded_video = null;
 	let vid_title = url;
 	let vid_length = null;
+	let play_title = "Listen to this song by clicking on the link provided in the title section";
 	if (url.includes("youtube") | url.includes("youtu.be") | url.includes("vimeo")){
 		const info = getVideoId(url);
 		vid_id = info.id;
@@ -664,7 +665,8 @@ function get_info(url){
 		source = "soundcloud";
 		embedded_video = "https://w.soundcloud.com/player/?url="+url+"&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true";
 	}
-	let vid_info = {"url":url, "date":new Date(), "vid_id":vid_id, "vid_title":vid_title, "vid_length":vid_length, "source":source, "embedded_video":embedded_video};
+	if (embedded_video != null){play_title = "Play";}
+	let vid_info = {"url":url, "date":new Date(), "vid_id":vid_id, "vid_title":vid_title, "vid_length":vid_length, "source":source, "embedded_video":embedded_video, "play_title":play_title};
 	return vid_info;
 }
 

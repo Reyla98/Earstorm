@@ -203,10 +203,6 @@ nav {
 
 
 /* forms */
-fieldset {
-  border: 5px solid blue;  /* !!!!!!!!!!!! marche pas !!!!!!!!!!! */
-}
-
 .form-inline{
   margin-left: 0px;
 }
