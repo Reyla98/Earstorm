@@ -101,7 +101,7 @@ describe('Tests on EarStorm', function(){
         await accountBtn.click();
         await driver.wait(until.urlContains("account"));
         let createPlaylistBtn = await driver.findElement(By.id('btnCreatePl'));
-        await createPlaylistBtn.click();
+        await driver.executeScript("arguments[0].click();", createPlaylistBtn);
         await driver.wait(until.urlContains("addPlaylist"));
         let playlistNameField = await driver.findElement(By.name("playlist_name"));
         let songsUrlField = await driver.findElement(By.name("playlist_songs"));
