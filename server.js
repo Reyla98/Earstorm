@@ -11,8 +11,6 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const getVideoId = require('get-video-id');
 const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-const Vimeo = require('vimeo').Vimeo;
-const vimeo_client = new Vimeo("86897882a8c60046da488a3951a1e2f8e038e75c", "hz7V5uo0opuShgJzaMPjJB1Bj+MyI1oAfsSJonrviX2znc/n3eZlWHK+iHtdNwg+sBGSHMQjadgbiSWfXF13aZit93jpyP8zP/1jPOcCAOUZw0w5i/wt4RyILG7PW1Pu", "a83e296b130f904e5753671c6ac0dee6");
 
 //Set up server
 const app = express();
@@ -620,12 +618,12 @@ function getAllDates(doc){
 }
 
 function get_info(url){
-	let vid_id = null;
-	let source = null;
-	let embedded_video = null;
+	let vid_id;
+	let source;
+	let embedded_video;
 	let vid_title = url;
-	let vid_length = null;
-	let play_title = "Listen to this song by clicking on the link provided in the title section";
+	let vid_length;
+	let play_title = "Play";
 	if (url.includes("youtube") | url.includes("youtu.be") | url.includes("vimeo")){
 		const info = getVideoId(url);
 		vid_id = info.id;
@@ -633,39 +631,33 @@ function get_info(url){
 		if (source == "youtube"){
 			embedded_video = "https://www.youtube.com/embed/"+vid_id+"?autoplay=1";
 			let API_url = "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=" + vid_id + "&key=AIzaSyDWSwITRSdspIeaC5upd9oZ6cE0z8b-bi4";
-			let API_data;
 			var request = new XMLHttpRequest();
 			request.open('GET', API_url, false);
 			request.send(null);
 			if (request.status === 200) {
-				API_data = request.responseText;
+				let data = JSON.parse(request.responseText);
+				vid_title = data.items[0].snippet.title;
+				vid_length = data.items[0].contentDetails.duration;
 			}
-			vid_title = API_data.replace(/"/g, "").replace("title: ", "").replace(/\n/g, "").replace(/  +/g, "").split(',');
-			vid_title = vid_title[7];
-			vid_length = API_data.replace(/"/g, "").replace("duration: ", "").replace(/\n/g, "").replace(/  +/g, "").replace(/,dimension:.*/, "").split('{');
-			vid_length = vid_length[11];
 		}
 		else if (source == "vimeo"){
 			embedded_video = "https://player.vimeo.com/video/"+vid_id+"?autoplay=1";
-			/*
-			let API_URL = "https://api.vimeo.com/videos/"+vid_id;
-			vimeo_client.request({
-				method: 'GET',
-				path: API_URL
-			}, function (error, body, status_code, headers) {
-				if (error) {
-					console.log(error);
-				}
-				console.log(body);
-			})
-			*/
+			let API_url = "https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/"+vid_id;
+			var request = new XMLHttpRequest();
+			request.open('GET', API_url, false);
+			request.send(null);
+			if (request.status === 200) {
+				let data = JSON.parse(request.responseText);
+				vid_title = data.title;
+				vid_length = data.duration;
+			}
 		}
 	}
 	if (url.includes("soundcloud")){
 		source = "soundcloud";
 		embedded_video = "https://w.soundcloud.com/player/?url="+url+"&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true";
 	}
-	if (embedded_video != null){play_title = "Play";}
+	if (embedded_video == null){play_title = "Listen to this song by clicking on the link provided in the title section";}
 	let vid_info = {"url":url, "date":new Date(), "vid_id":vid_id, "vid_title":vid_title, "vid_length":vid_length, "source":source, "embedded_video":embedded_video, "play_title":play_title};
 	return vid_info;
 }
