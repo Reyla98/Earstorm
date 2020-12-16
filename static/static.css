@@ -203,10 +203,6 @@ nav {
 
 
 /* forms */
-fieldset {
-  border: 5px solid blue;  /* !!!!!!!!!!!! marche pas !!!!!!!!!!! */
-}
-
 .form-inline{
   margin-left: 0px;
 }
@@ -298,7 +294,7 @@ label sm{
   padding-bottom:10px;
 }
 
-.player {
+#song_player {
   float:right;
   padding-bottom: 10px;
   padding-left: 10px;
