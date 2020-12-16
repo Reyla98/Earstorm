@@ -638,7 +638,7 @@ function get_info(url){
 				let data = JSON.parse(request.responseText);
 				vid_title = data.items[0].snippet.title;
 				vid_length = data.items[0].contentDetails.duration;
-			}
+			} else {console.log('Error: could not complete http request. ERROR CODE: ',request.status);}
 		}
 		else if (source == "vimeo"){
 			embedded_video = "https://player.vimeo.com/video/"+vid_id+"?autoplay=1";
@@ -650,10 +650,29 @@ function get_info(url){
 				let data = JSON.parse(request.responseText);
 				vid_title = data.title;
 				vid_length = data.duration;
-			}
+			} else {console.log('Error: could not complete http request. ERROR CODE: ',request.status);}
 		}
 	}
-	if (url.includes("soundcloud")){
+	else if (url.includes("dailymotion") | url.includes("dai.ly")){
+		source = "dailymotion";
+		if (url.includes("dailymotion")){
+			vid_id = url.replace(/.*video[/]/, "").replace(/[_?$#/].*/, "");
+		} else {
+			vid_id = url.replace(/.*dai.ly[/]/, "");
+		}
+		embedded_video = "https://www.dailymotion.com/embed/video/"+vid_id+"?autoplay=1";
+		let API_url = "https://api.dailymotion.com/video/"+vid_id+"?fields=title,duration";
+		var request = new XMLHttpRequest();
+		request.open('GET', API_url, false);
+		request.send(null);
+		if (request.status === 200) {
+			let data = JSON.parse(request.responseText);
+			console.log(data);
+			vid_title = data.title;
+			vid_length = data.duration;
+		} else {console.log('Error: could not complete http request. ERROR CODE: ',request.status);}
+	}
+	else if (url.includes("soundcloud")){
 		source = "soundcloud";
 		embedded_video = "https://w.soundcloud.com/player/?url="+url+"&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true";
 	}
