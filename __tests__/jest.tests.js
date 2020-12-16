@@ -1,8 +1,11 @@
 const {Builder, By, Key, Util} = require('selenium-webdriver');
 const script = require('jest');
 const {beforeAll} = require('@jest/globals');
+const { underscore } = require('consolidate');
 require('chromedriver');
-
+var userID;
+var passwordID = 'testPassword';
+var songsUrl = 'https://www.youtube.com/watch?v=WqRYBWyvbRo&ab_channel=EpitaphRecords, https://www.youtube.com/watch?v=MIajmLP46b4&ab_channel=UNFD, https://www.youtube.com/watch?v=SQNtGoM3FVU&ab_channel=NapalmRecords, https://www.youtube.com/watch?v=eH6tqXQNWUA&ab_channel=WhileSheSleepsVEVO'
 
 const url = 'http://localhost:8080/';
 
@@ -39,6 +42,7 @@ describe('Tests on EarStorm', function(){
         await usernameField.click();
         await driver.sleep(1000);
         let user = 'TestUsername'+(Math.floor(Math.random()*Math.floor(10000))).toString();
+        userID = user;
         await usernameField.sendKeys(user);
         await driver.sleep(1000);
         let passwordField = await driver.findElement(By.name('signUpPassword'));
@@ -54,5 +58,80 @@ describe('Tests on EarStorm', function(){
         await driver.get(url+'homepage');
         let username = await driver.findElement(By.id('username')).getText();
         expect(username).toBe(user);
+    });
+    test('Test de logout', async function(){
+        let accountBtn = await driver.findElement(By.id('username'));
+        await accountBtn.click();
+        let logoutBtn = await driver.findElement(By.id('logout'));
+        await logoutBtn.click();
+        await driver.get(url+'homepage');
+        let username = await driver.findElement(By.id('username')).getText();
+        expect(username.get).toBe(undefined);
+    });
+    test('Test login', async function(){
+        let loginButton = await driver.findElement(By.id('login'));
+        await loginButton.click();
+        let loginUsername = await driver.findElement(By.id('loginUsername'));
+        let loginPassword = await driver.findElement(By.id('loginPassword'));
+        let loginBtn = await driver.findElement(By.id('login'));
+        await loginUsername.clear();
+        await loginUsername.click();
+        await driver.sleep(1000);
+        await loginUsername.sendKeys(userID);
+        await driver.sleep(1000);
+        await loginPassword.clear();
+        await loginPassword.click();
+        await loginPassword.sendKeys(passwordID);
+        await loginBtn.click();
+        expect(await driver.getCurrentUrl()).toBe(url+'account');
+        await driver.get(url+'homepage');
+        let username = await driver.findElement(By.id('username')).getText();
+        expect(username).toBe(userID);
+    });
+    test('Test create new Playlist', async function(){
+        let accountBtn = await driver.findElement(By.id('username'));
+        await accountBtn.click();
+        let createPlaylistBtn = await driver.findElement(By.id('btnCreatePl'));
+        await createPlaylistBtn.click();
+        await driver.wait(function() {
+            return driver.executeScript('return document.readyState').then(function(readyState) {
+              return readyState === 'complete';
+            });
+          });
+        let playlistNameField = await driver.findElement(By.name("playlist_name"));
+        let songsUrlField = await driver.findElement(By.name("playlist_songs"));
+        let metalCheckBox = await driver.findElement(By.id("metal"));
+        let countryCheckBox = await driver.findElement(By.id("country"));
+        let additionalGenresField = await driver.findElement(By.name("playlist_add_genre"));
+        let descriptionField = await driver.findElement(By.name("playlist_descr"));
+        let savePlaylistBtn = await driver.findElement(By.name('saveplaylist'));
+        await playlistNameField.clear();
+        await playlistNameField.click();
+        await driver.sleep(1000);
+        await playlistNameField.sendKeys('Playlist For JTest');
+        await driver.sleep(1000);
+        await songsUrlField.clear();
+        await songsUrlField.click();
+        await songsUrlField.sendKeys(songsUrl);
+        await metalCheckBox.click();
+        await countryCheckBox.click();
+        await additionalGenresField.clear();
+        await additionalGenresField.click();
+        await additionalGenresField.sendKeys('AnotherGenre, OtherGenre');
+        await descriptionField.clear();
+        await descriptionField.click();
+        await descriptionField.sendKeys('This is the description of the playlist');
+        await savePlaylistBtn.click();
+        await expect(await driver.getCurrentUrl()).toBe(url+'account');
+    });
+    test('Playlist well added', async function(){
+        await driver.wait(function() {
+            return driver.executeScript('return document.readyState').then(function(readyState) {
+              return readyState === 'complete';
+            });
+          });
+        var table = driver.findElement(By.xpath('//*[@id="playlistTable"]/tbody/tr'));
+        console.log(table);
+
     });
 });

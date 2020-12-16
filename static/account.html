@@ -31,9 +31,9 @@
 			<p class="account_message" align="center">{{accountMessage}}</p>
       <h4>My Playlists</h4>
       <form action="addPlaylist" method="get">
-        <button class="btn btn-primary">Create new Playlist</button><br>
+        <button id='btnCreatePl'class="btn btn-primary">Create new Playlist</button><br>
       </form>
-      <table align="center" class="playlist_table">
+      <table align="center" class="playlist_table" id='playlistTable'>
         <thead>
         <tr align="center">
 					<th width="5%"></th>
@@ -44,7 +44,7 @@
 					<th width="10%"></th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id='tbody'>
           {{#playlist_list}}
           <tr>
             <td>{{picture}}</td>
@@ -59,7 +59,7 @@
       </table>
       <br>
       <form action="/logout" method=get>
-        <button class="btn btn-primary mx-auto d-block" type="submit">Log out</button>
+        <button id='logout' class="btn btn-primary mx-auto d-block" type="submit">Log out</button>
       </form>
     </div>
   </body>
