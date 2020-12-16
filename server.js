@@ -644,8 +644,9 @@ function get_info(url){
 			vid_length = API_data.replace(/"/g, "").replace("duration: ", "").replace(/\n/g, "").replace(/  +/g, "").replace(/,dimension:.*/, "").split('{');
 			vid_length = vid_length[11];
 		}
-		/* doesn't work with vimeo yet
 		else if (source == "vimeo"){
+			embedded_video = "https://player.vimeo.com/video/"+vid_id+"?autoplay=1";
+			/*
 			let API_URL = "https://api.vimeo.com/videos/"+vid_id;
 			vimeo_client.request({
 				method: 'GET',
@@ -656,8 +657,8 @@ function get_info(url){
 				}
 				console.log(body);
 			})
+			*/
 		}
-		*/
 	}
 	if (url.includes("soundcloud")){
 		source = "soundcloud";
