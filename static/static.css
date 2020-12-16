@@ -300,6 +300,12 @@ label sm{
   padding-left: 10px;
 }
 
+#player {
+  float:right;
+  padding-bottom: 10px;
+  padding-left: 10px;
+}
+
 #playlist_titles {
   height:200px;
   width:100%;

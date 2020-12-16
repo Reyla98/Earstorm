@@ -39,7 +39,7 @@
         <p>{{description}}</p>
         <p>Genres : {{genres}}</p>
       </div>
-      <table align="center" class="playlist_table">
+      <table align="center" class="playlist_table" id='songTable'>
         <thead>
           <tr align="center">
             <th width="5%"></th>
@@ -51,7 +51,7 @@
           {{#song_list}}
             <tr>
               <td>
-                <button class="btn btn-default mx-auto d-block">
+                <button name="{{source}}"id="{{vid_id}}"class="btn btn-default mx-auto d-block">
                   <a href="{{embedded_video}}" embed target="song_player" title="{{play_title}}">
                     <img src="../img/play-button.png" alt="play button" width="16px" height="16px" id="play-button">
                   </a>
@@ -69,4 +69,5 @@
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src='ytb.js'></script>
   </html>
