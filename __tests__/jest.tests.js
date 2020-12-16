@@ -8,6 +8,7 @@ var passwordID = 'testPassword';
 var songsUrl = 'https://www.youtube.com/watch?v=WqRYBWyvbRo&ab_channel=EpitaphRecords, https://www.youtube.com/watch?v=MIajmLP46b4&ab_channel=UNFD, https://www.youtube.com/watch?v=SQNtGoM3FVU&ab_channel=NapalmRecords, https://www.youtube.com/watch?v=eH6tqXQNWUA&ab_channel=WhileSheSleepsVEVO'
 
 const url = 'http://localhost:8080/';
+jest.setTimeout(10000);
 
 describe('Tests on EarStorm', function(){
     let driver;
@@ -18,7 +19,7 @@ describe('Tests on EarStorm', function(){
 
     afterAll(async function(){
         await driver.quit();
-    }, 15000);
+    }, 20000);
 
     test('Check title of the page', async function(){
         await driver.get(url);
@@ -29,6 +30,7 @@ describe('Tests on EarStorm', function(){
         await driver.get(url);
         let button = await driver.findElement(By.id('discover'));
         await button.click();
+        await driver.wait(until.urlContains("homepage"));
         let currentUrl = await driver.getCurrentUrl();
         expect(currentUrl).toBe(url+'homepage');
     });
@@ -36,6 +38,7 @@ describe('Tests on EarStorm', function(){
         await driver.get(url+'homepage');
         let loginButton = await driver.findElement(By.id('login'));
         await loginButton.click();
+        await driver.wait(until.urlContains("login"));
         let currentUrl = await driver.getCurrentUrl();
         expect(currentUrl).toBe(url+'login');
         let usernameField = await driver.findElement(By.name('signUpUsername'));
@@ -54,6 +57,7 @@ describe('Tests on EarStorm', function(){
         await emailField.clear();
         await emailField.sendKeys('testEmail@test.com');
         await driver.findElement(By.id('signUp')).click();
+        await driver.wait(until.urlContains("signup"));
         await driver.sleep(1000);
         await driver.get(url+'homepage');
         let username = await driver.findElement(By.id('username')).getText();
@@ -62,6 +66,7 @@ describe('Tests on EarStorm', function(){
     test('Test de logout', async function(){
         let accountBtn = await driver.findElement(By.id('username'));
         await accountBtn.click();
+        await driver.wait(until.urlContains("account"));
         let logoutBtn = await driver.findElement(By.id('logout'));
         await logoutBtn.click();
         await driver.get(url+'homepage');
@@ -71,6 +76,7 @@ describe('Tests on EarStorm', function(){
     test('Test login', async function(){
         let loginButton = await driver.findElement(By.id('login'));
         await loginButton.click();
+        await driver.wait(until.urlContains("login"));
         let loginUsername = await driver.findElement(By.id('loginUsername'));
         let loginPassword = await driver.findElement(By.id('loginPassword'));
         let loginBtn = await driver.findElement(By.id('login'));
@@ -83,14 +89,17 @@ describe('Tests on EarStorm', function(){
         await loginPassword.click();
         await loginPassword.sendKeys(passwordID);
         await loginBtn.click();
+        await driver.wait(until.urlContains("account"));
         expect(await driver.getCurrentUrl()).toBe(url+'account');
         await driver.get(url+'homepage');
+        await driver.wait(until.urlContains("homepage"));
         let username = await driver.findElement(By.id('username')).getText();
         expect(username).toBe(userID);
     });
     test('Test create new Playlist', async function(){
         let accountBtn = await driver.findElement(By.id('username'));
         await accountBtn.click();
+        await driver.wait(until.urlContains("account"));
         let createPlaylistBtn = await driver.findElement(By.id('btnCreatePl'));
         await createPlaylistBtn.click();
         await driver.wait(until.urlContains("addPlaylist"));
@@ -118,9 +127,11 @@ describe('Tests on EarStorm', function(){
         await descriptionField.click();
         await descriptionField.sendKeys('This is the description of the playlist');
         await savePlaylistBtn.click();
+        await driver.wait(until.urlContains("account"));
         await expect(await driver.getCurrentUrl()).toBe(url+'account');
     });
     test('Playlist well added', async function(){
-
+        var rows = document.getElementById('songTable').getElementsByTagName('tr');
+        console.log(rows);
     });
 });
