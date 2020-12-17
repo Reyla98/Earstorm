@@ -44,7 +44,11 @@
         <tbody>
           {{#playlist_list}}
           <tr>
-            <td>{{picture}}</td>
+            <td>
+              <div class="color_box" style="background-color: {{color}}">
+                <img src="/img/logo_{{theme}}.png" alt="logo" width="32px" height="32px">
+              </div>
+            </td>
             <td><a href="/playlist_content?id={{_id}}">{{title}}</a></td>
             <td>{{description}}</td>
             <td>{{creation_date}}</td>

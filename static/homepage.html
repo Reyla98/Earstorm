@@ -82,7 +82,15 @@
 
           {{#playlist_list}}
           <tr>
-            <td>{{picture}}</td><td><a href="/playlist_content?id={{_id}}">{{title}}</a></td><td class="ellipsis" title="{{description}}">{{description}}</td><td><a href="/user_playlists?creator={{creator}}">{{creator}}</a></td><td>{{creation_date}}</td><td>{{modification_date}}</td>
+            <td>
+                <div class="color_box" style="background-color: {{color}}">
+                    <img src="/img/logo_{{theme}}.png" alt="logo" width="32px" height="32px">
+                </div>
+            </td>
+            <td><a href="/playlist_content?id={{_id}}">{{title}}</a></td>
+            <td class="ellipsis" title="{{description}}">{{description}}</td>
+            <td><a href="/user_playlists?creator={{creator}}">{{creator}}</a></td>
+            <td>{{creation_date}}</td><td>{{modification_date}}</td>
           </tr>
           {{/playlist_list}}
         </tbody>

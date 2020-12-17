@@ -198,7 +198,7 @@ nav {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-		
+
 }
 
 
@@ -283,7 +283,12 @@ label sm{
 }
 
 .del-link:hover {
-  color:white
+  color:white;
+}
+
+.color_box {
+    width: 32px;
+    height: 32px;
 }
 
 
@@ -291,7 +296,8 @@ label sm{
 #playlist_image {
   float: left;
   padding-right: 10px;
-  padding-bottom:10px;
+  padding-bottom: 10px;
+  margin-right: 5px;
 }
 
 #song_player {

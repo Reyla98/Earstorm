@@ -107,7 +107,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 												 pl_title:"Title", pl_descr:"Description ˄", pl_creator:"Creator", pl_created:"Created on", pl_modified:"Last modified on"}
 					res.render(req.session.origin, newDoc);
 				}
-			} else {				
+			} else {
 				req.session.sorting = "description-1";
 				req.session.search = req.session.search.reverse();
 				let doc = getAllDates(req.session.search);
@@ -239,7 +239,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				}
 			});
 		});
-		
+
 		app.get('/login', function(req, res) {
 			res.render("login.html");
 		});
@@ -334,11 +334,12 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			if (req.session.username == null){
 				return res.render('login.html', {disconnectedErrorMessage:"Please log in to create and modify playlists."});
 			}
-			let illustration = req.body.customFile;
 			let title = req.body.playlist_name;
 			let description = req.body.playlist_descr || "No description";
 			let creator = req.session.username;
 			let modification_date = new Date();
+			let color = req.body.playlist_color;
+			if (getBrightness(color) < 130) {var theme = "light"} else {var theme = "dark"}
 			let urls = (req.body.playlist_songs).replace(/ /g, "").replace("\n", "").replace("\r", "").split(",");
 			let genres = [];
 			if (Array.isArray(req.body.playlist_genres)) {
@@ -363,14 +364,15 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 					}
 				}
 				let playlist_info = {
-					picture: null,
 					title: title,
 					description: description,
 					creator: creator,
 					creation_date: new Date(),
 					modification_date: modification_date,
 					genres: genres,
-					songs: songs
+					songs: songs,
+					color: color,
+					theme: theme
 				};
 				dbo.collection('playlists').insertOne(playlist_info, function(err,result) {
 					if (err) throw err;
@@ -396,12 +398,13 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 						}
 					}
 					var playlist_info = {
-						picture: null,
 						title: title,
 						description: description || "No description",
 						modification_date: new Date(),
 						genres: genres,
-						songs: songs
+						songs: songs,
+						color: color,
+						theme: theme
 					};
 					dbo.collection('playlists').updateOne({_id: ObjectId(id)}, {$set:playlist_info}, function(err, result) {
 						if (err) throw err;
@@ -425,23 +428,28 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 					doc.picture = 'img/logo.png';
 				}
 				if (req.session.username != null) {
-					res.render("playlist_content.html", {"song_list": doc.songs,
-																							 username: req.session.username,
-																							 title: doc.title,
-																							 genres: doc.genres,
-																							 description: doc.description,
-																							 creator: doc.creator,
-																							 playlist_picture: doc.picture
-																							});
+					res.render("playlist_content.html", {
+						"song_list": doc.songs,
+						 username: req.session.username,
+						 title: doc.title,
+						 genres: doc.genres,
+						 description: doc.description,
+						 creator: doc.creator,
+						 playlist_color: doc.color,
+						 theme: doc.theme
+
+					});
 				} else {
-					res.render('playlist_content.html', {"song_list": doc.songs,
-																							 login:"Log in",
-																							 title: doc.title,
-																							 genres: doc.genres,
-																							 description: doc.description,
-																							 creator: doc.creator,
-																							 playlist_picture: doc.picture
-																							});
+					res.render('playlist_content.html', {
+						"song_list": doc.songs,
+						 login:"Log in",
+						 title: doc.title,
+						 genres: doc.genres,
+						 description: doc.description,
+						 creator: doc.creator,
+						 playlist_color: doc.color,
+						 theme: doc.theme
+					});
 				}
 			})
 		});
@@ -567,7 +575,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				}
 			});
 		});
-		
+
 		app.get('/user_playlists', function(req, res) {
 			req.session.creator = req.query.creator;
 			dbo.collection('playlists').find({creator:req.session.creator}).toArray(function(err, doc) {
@@ -696,8 +704,21 @@ function arrayRemove(arr, value) {
 	});
 }
 
-function IOSDate(date) {
-	return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate()
-	+ " " + date.getHours() + ":" + date.getMinutes() + "." + date.getSeconds()
-	+ "." + date.getMilliseconds()
+function hexToDec(hex) {
+	// source: https://www.expertsphp.com/how-to-convert-hexadecimal-to-decimal-using-javascript/
+	var result = 0, digitValue;
+	for (var i = 0; i < hex.length; i++) {
+		digitValue = '0123456789abcdefgh'.indexOf(hex[i]);
+		result = result * 16 + digitValue;
+	}
+	return result;
+}
+
+function getBrightness(hex_color) {
+	let red = hexToDec(hex_color.slice(1,3));
+	let green = hexToDec(hex_color.slice(3, 5));
+	let blue = hexToDec(hex_color.slice(5, 7));
+	//brightness formula found here: https://www.nbdtech.com/Blog/archive/2008/04/27/Calculating-the-Perceived-Brightness-of-a-Color.aspx
+	let brightness = Math.sqrt(0.241 * red**2 + 0.691 * green**2 + 0.068 * blue**2)
+	return brightness
 }
