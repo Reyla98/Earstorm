@@ -31,42 +31,46 @@
     </nav>
       <div class="container">
         <h4>Browse through genres:</h4>
-        <form name=filterGenre method=get action='/showAll'>
-          <input type="checkbox" name="playlist_genres" value="alternative" {{checked}}>
-          <label for="filterGenre">Alternative </label>
+        <form action='/selectGenres' method=post>
+					<fieldset>
+          <input type="checkbox" name="playlist_genres" value="alternative" {{alternative}}>
+          <label for="alternative">Alternative </label>
 
-          <input type="checkbox" name="playlist_genres" value="country" {{checked}}>
+          <input type="checkbox" name="playlist_genres" value="country" {{country}}>
           <label for="country">Country </label>
 
-          <input type="checkbox" name="playlist_genres" value="folk" {{checked}}>
+          <input type="checkbox" name="playlist_genres" value="folk" {{folk}}>
           <label for="folk">Folk </label>
 
-          <input type="checkbox" name="playlist_genres" value="house" {{checked}}>
+          <input type="checkbox" name="playlist_genres" value="house" {{house}}>
           <label for="house">House </label>
 
-          <input type="checkbox" name="playlist_genres" value="latino" {{checked}}>
+          <input type="checkbox" name="playlist_genres" value="latino" {{latino}}>
           <label for="latino">Latino </label>
 
-          <input type="checkbox" name="playlist_genres" value="metal" {{checked}}>
+          <input type="checkbox" name="playlist_genres" value="metal" {{metal}}>
           <label for="metal">Metal </label>
 
-          <input type="checkbox" name="playlist_genres" value="pop" {{checked}}>
+          <input type="checkbox" name="playlist_genres" value="pop" {{pop}}>
           <label for="pop">Pop </label>
 
-          <input type="checkbox" name="playlist_genres" value="punk" {{checked}}>
+          <input type="checkbox" name="playlist_genres" value="punk" {{punk}}>
           <label for="punk">Punk </label>
 
-          <input type="checkbox" name="playlist_genres" value="rock" {{checked}}>
+          <input type="checkbox" name="playlist_genres" value="rock" {{rock}}>
           <label for="rock">Rock </label>
 
-          <input type="checkbox" name="playlist_genres" value="techno" {{checked}}>
+          <input type="checkbox" name="playlist_genres" value="techno" {{techno}}>
           <label for="techno">Techno </label>
 
-          <input type="checkbox" name="playlist_genres" value="other">
+          <input type="checkbox" name="playlist_genres" value="other" {{other}}>
           <label for="techno">Other </label>
-        <button class="btn btn-primary">Show all</button><br>
-      </form>
-
+					</fieldset>
+					<button type='submit' class="btn btn-primary">Apply selection</button>
+				</form>
+				<form name=allGenres method=get action='/showAll'>
+					<button class="btn btn-primary">Show all genres</button>
+				</form>
       <table align="center" class="playlist_table">
         <thead>
           <tr align="center">
@@ -88,7 +92,7 @@
                 </div>
             </td>
             <td><a href="/playlist_content?id={{_id}}">{{title}}</a></td>
-            <td class="ellipsis" title="{{description}}">{{description}}</td>
+            <td class="ellipsis" title="Genres: {{genres}}">{{description}}</td>
             <td><a href="/user_playlists?creator={{creator}}">{{creator}}</a></td>
             <td>{{creation_date}}</td><td>{{modification_date}}</td>
           </tr>
