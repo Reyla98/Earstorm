@@ -12,17 +12,10 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const getVideoId = require('get-video-id');
 const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-var secured = false;
 
 //Set up server
 const app = express();
 app.use(session({secret:'earstorm123', resave: true, saveUninitialized: false}));
-/*
-J'ai ajouté les options resave & saveUninitialized pour retirer le 'deprecation warning' au lancement du serveur...
-Mais je ne suis pas certaine pour les valeurs, je me suis basée sur ce que j'ai lu ici:
-https://stackoverflow.com/questions/40381401/when-to-use-saveuninitialized-and-resave-in-express-session
-https://github.com/expressjs/session#options
-*/
 app.engine('html', consolidate.hogan);
 app.set('views', 'static');
 app.use(express.static('static'));
@@ -34,6 +27,10 @@ app.use(bodyParser.text());
 MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net/Earstorm?retryWrites=true&w=majority', { useUnifiedTopology: true }, (err, db) => {
 		if (err) throw err;
 		var dbo = db.db('earstorm');
+		/* CLEAN DB > un-comment these lines and connect to server to remove users and playlists created in test.
+		dbo.collection('users').removeMany({email:'testEmail@test.com'});
+		dbo.collection('playlists').removeMany({title:'Playlist for JTest'});
+		*/
 
 		app.get('/', function(req, res) {
 			res.render('welcome_page.html');
@@ -288,11 +285,17 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		});
 
 		app.get('/addPlaylist', function(req, res) {
+			if (req.session.username == null){
+				return res.render('login.html', {disconnectedErrorMessage:"Please log in to create a playlist."});
+			}
 			req.session.playlist_id = null;
 			res.render('create_playlist.html', {username:req.session.username, pagetitle: "New playlist", pageheader: "Create a new playlist", saveplaylist:"Save playlist"});
 		});
 
 		app.get('/modifyPlaylist', function(req, res) {
+			if (req.session.username == null){
+				return res.render('login.html', {disconnectedErrorMessage:"Please log in to modify your playlists."});
+			}
 			let id = req.query.id;
 			req.session.playlist_id = id;
 			dbo.collection('playlists').findOne({"_id" : ObjectId(id)}, function(err, doc) {
@@ -602,7 +605,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			req.session.username = null;
 			res.redirect('/homepage');
 		});
-		if(secured){
+		
+		if(process.argv.slice(2) == 'secured'){
 		https.createServer({
 			key: fs.readFileSync('./key.pem'),
 			cert: fs.readFileSync('./cert.pem'),
