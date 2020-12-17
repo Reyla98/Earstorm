@@ -15,13 +15,17 @@ for(i=0;i<sources.length;i++){
 }
 if(onlyYtb){
     var iframe = document.getElementById('song_player');
+    var hrefs = document.getElementsByTagName('a');
+    for(let i = 3; i<hrefs.length; i+=2){
+        hrefs[i].href="";
+    }
     iframe.style.width = 0;
     iframe.style.height = 0;
     for(j=0; j<ids.length; j++){
         let button = document.getElementById(ids[j]);
         button.addEventListener("click", function(){
-            console.log('button')
             i = ids.indexOf(button.id);
+            iframe.src="";
             player.loadVideoById(ids[i]);
             player.playVideo();
         });
