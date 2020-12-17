@@ -10,7 +10,7 @@ var songsUrl = 'https://www.youtube.com/watch?v=WqRYBWyvbRo&ab_channel=EpitaphRe
 const url = 'http://localhost:8080/';
 jest.setTimeout(10000);
 
-describe('Tests on EarStorm', function(){
+describe('EarStorm Tests', function(){
     let driver;
     
     beforeAll(async function(){
@@ -131,7 +131,26 @@ describe('Tests on EarStorm', function(){
         await expect(await driver.getCurrentUrl()).toBe(url+'account');
     });
     test('Playlist well added', async function(){
-        var rows = document.getElementById('songTable').getElementsByTagName('tr');
-        console.log(rows);
+        var tbody = await driver.findElement(By.id('tbody'));
+        var addedPlaylist = await tbody.getText();
+        addedPlaylist = addedPlaylist.split(" ");
+        let playlistName = addedPlaylist.slice(0,3).toString();
+        let playlistDesciption = addedPlaylist.slice(3,10).toString();
+        let creationDate = addedPlaylist.slice(10,13).toString();
+        let modificationDate = addedPlaylist.slice(13,16).toString();
+        expect(playlistName.replace(/,/g, " ")).toBe("Playlist For JTest");
+        expect(playlistDesciption.replace(/,/g, " ")).toBe("This is the description of the playlist");
+        expect(creationDate.replace(',', " ")).toBe(getFullDate(new Date()));
+        expect(modificationDate.replace(',', " ")).toBe(getFullDate(new Date()));
+    });
+    test('Play Playlist', async function(){
+        //TODO
     });
 });
+
+function getFullDate(d) {
+    let date = new Date(d);
+    let months = ["January", "February", "March", "April", "May", "June", "July", "Augustus", "September", "October", "November", "December"]
+    let fullDate = months[date.getMonth()] + " " + date.getDate() + ",,"+ date.getFullYear();
+    return fullDate;
+}
