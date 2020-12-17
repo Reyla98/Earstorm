@@ -321,6 +321,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				playlist_info['username'] = req.session.username;
 				playlist_info['description'] = doc.description;
 				playlist_info['title'] = doc.title;
+				playlist_info['color'] = doc.color;
 				playlist_info['pagetitle'] = 'Modify playlist"'+doc.title+'"';
 				playlist_info['pageheader'] = 'Modify your playlist';
 				playlist_info['saveplaylist'] = "Save changes";
