@@ -52,7 +52,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				res.render('homepage.html', newDoc);
 			});
 		});
-	
+
 		app.get('/sort_titles', function(req, res) {
 			let newDoc = {pl_descr:'Description', pl_creator:'Creator', pl_created:'Created on', pl_modified:'Last modified on', user_creator:req.session.creator};
 			if (req.session.sorting != 'titles1'){
@@ -299,17 +299,20 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			}
 			let other_genres = (req.body.playlist_add_genre).replace(/\n/g, '').split(',');
 			for (let genre of other_genres) {
-					genre = genre.replace(/^ +/g, '').replace(/ +$/g, '');
-					if (genre != ''){
-						genres.push(genre);
-					}
+				genre = genre.replace(/^ +/g, '').replace(/ +$/g, '');
+				if (genre != ''){
+					genres.push(genre);
 				}
+			}
 			if (req.session.playlist_id == null) {
 				console.log('Creating new playlist');
 				let songs = [];
+				let song_titles = "";
 				for (let url of urls){
 					if (url != ''){
 						let vid_info = get_info(url);
+						song_titles += vid_info;
+						song_titles += " ";
 						songs.push(vid_info);
 					}
 				}
@@ -321,6 +324,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 					modification_date: modification_date,
 					genres: genres,
 					songs: songs,
+					song_titles: song_titles,
 					color: color,
 					theme: theme
 				};
@@ -334,8 +338,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				dbo.collection('playlists').findOne({_id:ObjectId(id)}, function(err, doc) {
 					let songs = doc.songs;
 					let urls_already_in = [];
-					for (let song of songs){
-						if (urls.includes(song.url)){
+					for (let song of songs) {
+						if (urls.includes(song.url)) {
 							urls_already_in.push(song.url);
 						} else {
 							songs = arrayRemove(songs, song);
@@ -345,7 +349,13 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 						if (! urls_already_in.includes(url) && url != '') {
 							let vid_info = get_info(url);
 							songs.push(vid_info);
+
 						}
+					}
+					let song_titles = "";
+					for (let song of songs) {
+						song_titles += song.vid_title;
+						song_titles += " ";
 					}
 					var playlist_info = {
 						title: title,
@@ -353,6 +363,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 						modification_date: new Date(),
 						genres: genres,
 						songs: songs,
+						song_titles: song_titles,
 						color: color,
 						theme: theme
 					};
@@ -409,7 +420,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				dbo.collection('playlists').aggregate([{$search:
 					{'text':
 						{'query': req.query.search_words,
-						 'path': ['description', 'creator', 'title', 'genres'],
+						 'path': ['description', 'creator', 'title', 'genres', 'song_titles'],
 						 'fuzzy': {}
 						}
 					}
@@ -441,11 +452,11 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		})
 
 		app.post('/advancedSearch', function(req, res) {
-			console.log(req.body.description);
-			if (req.body.description == '') { req.body.description = ' '; }
-			if (req.body.title == '') { req.body.title = ' '; }
-			if (req.body.genre == '') { req.body.genre = ' '; }
-			if (req.body.creator == '') { req.body.creator = ' '; }
+			if (req.body.description == '') { req.body.description = ' ' }
+			if (req.body.playlist_title == '') { req.body.playlist_title = ' ' }
+			if (req.body.song_titles == '') {req.body.song_titles = ' ' }
+			if (req.body.genre == '') { req.body.genre = ' ' }
+			if (req.body.creator == '') { req.body.creator = ' ' }
 			dbo.collection('playlists').aggregate([{$search:
 				{
 					'compound': {
@@ -457,8 +468,14 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 							}
 						}, {
 							'text': {
-								'query': req.body.title,
+								'query': req.body.playlist_title,
 								'path': ['title'],
+								'fuzzy': {}
+							}
+						}, {
+							'text': {
+								'query': req.body.song_titles,
+								'path': ['song_titles'],
 								'fuzzy': {}
 							}
 						}, {
@@ -522,7 +539,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				res.render('user_playlists.html', newDoc);
 			});
 		});
-		
+
 		app.post('/selectGenres', function(req, res) {
 			let newDoc = {pl_title:'Title', pl_descr:'Description', pl_creator:'Creator', pl_created:'Created on', pl_modified:'Last modified on'};
 			req.session.search = req.session.showAll;
@@ -559,7 +576,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			if (req.session.username != null) {
 				newDoc['username'] = req.session.username;
 			} else {
-				newDoc['login'] = 'Log in';	
+				newDoc['login'] = 'Log in';
 			}
 			res.render('homepage.html', newDoc);
 		});
@@ -570,7 +587,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			if (req.session.username != null) {
 				newDoc['username'] = req.session.username;
 			} else {
-				newDoc['login'] = 'Log in';	
+				newDoc['login'] = 'Log in';
 			}
 			res.render('homepage.html', newDoc);
 		});
@@ -579,7 +596,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			req.session.username = null;
 			res.redirect('/homepage');
 		});
-		
+
 		if(process.argv.slice(2) == 'secured'){
 		https.createServer({
 			key: fs.readFileSync('./key.pem'),
