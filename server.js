@@ -522,7 +522,6 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		})
 
 		app.post('/advancedSearch', function(req, res) {
-			console.log(req.body.description);
 			if (req.body.description == "") { req.body.description = " " }
 			if (req.body.playlist_title == "") { req.body.playlist_title = " " }
 			if (req.body.song_titles == "") {req.body.song_titles = " " }
@@ -539,17 +538,17 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 							}
 						}, {
 							"text": {
-								"query": req.body.title,
+								"query": req.body.playlist_title,
 								"path": ["title"],
 								"fuzzy": {}
 							}
 						}, {
-				//			"text": {
-				//				"query": req.body.song_titles,
-				//				"path": ["song_titles"],
-				//				"fuzzy": {}
-				//			}
-				//		}, {
+							"text": {
+								"query": req.body.song_titles,
+								"path": ["song_titles"],
+								"fuzzy": {}
+							}
+						}, {
 							"text": {
 								"query": req.body.creator,
 								"path": ["creator"],
