@@ -143,8 +143,29 @@ describe('EarStorm Tests', function(){
         expect(creationDate.replace(',', " ")).toBe(getFullDate(new Date()));
         expect(modificationDate.replace(',', " ")).toBe(getFullDate(new Date()));
     });
-    test('Play Playlist', async function(){
-        //TODO
+    test('Search Function', async function(){
+        await driver.get(url+"homepage");
+        await driver.wait(until.urlContains("homepage"));
+        var searchField = await driver.findElement(By.name("search_words"));
+        var input = ['favourite','music'];
+        await searchField.clear();
+        await searchField.click();
+        await searchField.sendKeys(input[0]+' '+input[1]);
+        var searchBtn = await driver.findElement(By.id('searchBtn'));
+        await searchBtn.click();
+        var tbody = await driver.findElement(By.id('tbody'));
+        var playlists = await tbody.getText();
+        expect(playlists).toContain(input[0]||input[1]);
+        input = "ugszidjzidgugfzzdhfzfz";
+        var searchField = await driver.findElement(By.name("search_words"));
+        await searchField.clear();
+        await searchField.click();
+        await searchField.sendKeys(input);
+        var searchBtn = await driver.findElement(By.id('searchBtn'));
+        await searchBtn.click();
+        var tbody = await driver.findElement(By.id('tbody'));
+        playlists = await tbody.getText();
+        expect(playlists).toBe("");
     });
 });
 
