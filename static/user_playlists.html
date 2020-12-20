@@ -22,11 +22,11 @@
             <a class="nav-link link" href="/login">{{login}}</a>
           </li>
         </ul>
-        <form action="searchplaylist" class="form-inline my-2 my-lg-0" method="get">
+        <form action="search_playlist" class="form-inline my-2 my-lg-0" method="get">
           <input class="form-control mr-sm-2" type="search" name="search_words" placeholder="Search a playlist" aria-label="Search">
           <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
         </form>
-        <button class="btn btn-outline-light my-2" onclick="document.location.href='/advancedSearch'" title="Go to advanced search" href="/advancedSearch">+</button>
+        <button class="btn btn-outline-light my-2" onclick="document.location.href='/advanced_search'" title="Go to advanced search" href="/advanced_search">+</button>
       </div>
     </nav>
     <div class="container">
@@ -36,7 +36,7 @@
         <tr align="center">
 					<th width="5%"></th>
 					<th width="15%"><a class="sort-link link"  href="/sort_titles">{{heading_title}}</a></th>
-					<th width="24%"><a class="sort-link link"  href="/sort_description">{{heading_descr}}</a></th>
+					<th width="24%"><a class="sort-link link"  href="/sort_description">{{heading_description}}</a></th>
 					<th width="18%"><a class="sort-link link"  href="/sort_created">{{heading_created}}</a></th>
 					<th width="18%"><a class="sort-link link"  href="/sort_modified">{{heading_modified}}</a></th>
         </tr>

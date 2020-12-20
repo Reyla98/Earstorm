@@ -22,11 +22,11 @@
             <a class="nav-link link" href="/login">{{login}}</a>
           </li>
         </ul>
-        <form action="searchplaylist" class="form-inline my-2 my-lg-0" method="get">
+        <form action="search_playlist" class="form-inline my-2 my-lg-0" method="get">
           <input class="form-control mr-sm-2" type="search" name="search_words" placeholder="Search a playlist" aria-label="Search">
           <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
         </form>
-        <button class="btn btn-outline-light my-2" onclick="window.open('/advancedSearch')" title="Go to advanced search" href="/advancedSearch">+</button>
+        <button class="btn btn-outline-light my-2" onclick="window.open('/advanced_search')" title="Go to advanced search" href="/advanced_search">+</button>
       </div>
     </nav>
     <div class="container">
@@ -43,8 +43,8 @@
         <thead>
           <tr align="center">
             <th width="5%"></th>
-            <th width="60%">Title</th>
-            <th width="20%">Added on</th>
+            <th width="60%"><a class="sort-link link"  href="/sort_songtitles">{{heading_songtitle}}</a></th>
+            <th width="20%"><a class="sort-link link"  href="/sort_added">{{heading_added}}</a></th>
           </tr>
         </thead>
         <tbody>
@@ -52,7 +52,7 @@
             <tr>
               <td>
                 <button name="{{source}}"id="{{vid_id}}"class="btn btn-default mx-auto d-block">
-                  <a href="{{embedded_video}}" embed target="song_player" title="{{play_title}}">
+                  <a href="{{embedded_video}}" embed target="song_player" title="{{play_button}}">
                     <img src="../img/play-button.png" alt="play button" width="16px" height="16px" id="play-button">
                   </a>
                 </button>
