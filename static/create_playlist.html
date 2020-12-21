@@ -26,10 +26,10 @@
         <button class="btn btn-outline-light my-2" onclick="document.location.href='/advanced_search'" title="Go to advanced search" href="/advanced_search">+</button>
       </div>
     </nav>
-    <div class="container" id="createPlaylist">
+    <div class="container" id="create_playlist">
       <h4>{{pageheader}}:</h4>
       <a href="/delete_playlist?id={{_id}}" class="del-link link" color="tomato">{{deleteplaylist}}</a>
-      <form action="createPlaylist" method="post">
+      <form action="create_playlist" method="post">
         <label for="playlist_name">Playlist name:</label><br>
         <textarea class="one_line_text_area" name="playlist_name" required>{{title}}</textarea><br><br>
 
@@ -82,7 +82,7 @@
 
         <label for="playlist_color">Color: </label>
         <input type="color" name="playlist_color" value={{color}}>
-        
+
         <br><br><br>
         <div class="col text-center"><button type="submit" class="btn btn-primary" name="saveplaylist">{{saveplaylist}}</button></div>
       </form>
