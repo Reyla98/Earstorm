@@ -565,7 +565,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		if ( req.body.description == ''
 		&& req.body.playlist_title == ''
 		&& req.body.song_titles == ''
-		//&& req.body.genre == ''
+		&& req.body.genre == ''
 		&& req.body.creator == ''){
 			dbo.collection('playlists').find({}).toArray(function(err, doc) {
 				if (err) throw err;
@@ -596,7 +596,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			if (req.body.description == ''){ req.body.description = ' '; }
 			if (req.body.playlist_title == ''){ req.body.playlist_title = ' '; }
 			if (req.body.song_titles == ''){req.body.song_titles = ' '; }
-			if (req.body.genre == ''){ req.body.genre = ' '; }
+			if (req.body.genres == ''){ req.body.genre = ' '; }
 			if (req.body.creator == ''){ req.body.creator = ' '; }
 			dbo.collection('playlists').aggregate([{$search:
 				{
@@ -617,6 +617,12 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 							'text': {
 								'query': req.body.song_titles,
 								'path': ['song_titles'],
+								'fuzzy': {}
+							}
+						}, {
+							'text': {
+								'query': req.body.genres,
+								'path': ['genres'],
 								'fuzzy': {}
 							}
 						}, {
