@@ -8,66 +8,65 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
   </head>
   <body>
-      <nav class="navbar navbar-expand-lg fixed-top">
-        <a class="navbar-brand" href="/homepage">EarStorm <img src="img/logo.png" width="50" height="50" alt="logo"></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-  			<a class="nav-link link"  href="/account">{{username}}</a>
-            </li>
-  		  <li class="nav-item">
-              <a class="nav-link link" href="/login">{{login}}</a>
-            </li>
-          </ul>
-          <form action="search_playlist" class="form-inline my-2 my-lg-0" method="get">
-            <input class="form-control mr-sm-2" type="search" name="search_words" placeholder="Search a playlist" aria-label="Search">
-            <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
-          </form>
-          <button class="btn btn-outline-light my-2" onclick="window.open('/advanced_search')" title="Go to advanced search" href="/advanced_search">+</button>
+    <nav class="navbar navbar-expand-lg fixed-top">
+      <a class="navbar-brand" href="/homepage">EarStorm <img src="img/logo.png" width="50" height="50" alt="logo"></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link link"  href="/account">{{username}}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link link" href="/login">{{login}}</a>
+          </li>
+        </ul>
+        <form action="search_playlist" class="form-inline my-2 my-lg-0" method="get">
+          <input class="form-control mr-sm-2" type="search" name="search_words" placeholder="Search a playlist" aria-label="Search">
+          <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        <button class="btn btn-outline-light my-2" onclick="window.open('/advanced_search')" title="Go to advanced search" href="/advanced_search">+</button>
+      </div>
+    </nav>
+    <div class="container">
+      <h4>Advanced search</h4>
+      <p class="error_message">{{searchErrorMessage}}</p>
+      <form action="advanced_search" method="post" name="advanced_search">
+        <div class="form-group">
+          <label for="playlist_title">Playlist title:</label>
+          <input class="form-control" placeholder="Search for words in the playlist titles" id="playlist_title" name="playlist_title">
         </div>
-      </nav>
-    <div class="bg"></div>
-        <div class="container">
-          <h4>Advanced search</h4>
-          <p class="error_message">{{searchErrorMessage}}</p>
-          <form action="advanced_search" method="post" name="advanced_search">
-            <div class="form-group">
-              <label for="playlist_title">Playlist title:</label>
-              <input class="form-control" placeholder="Search for words in the playlist titles" id="playlist_title" name="playlist_title">
-            </div>
-            <div class="form-group">
-              <label for="song_titles">Songs:</label>
-              <input class="form-control" placeholder="Search for words in the titles of songs" id="song_titles" name="song_titles">
-            </div>
-            <div class="form-group">
-              <label for="description">Playlist description:</label>
-              <input class="form-control" placeholder="Search for words in the descriptions" id="description" name="description">
-            </div>
-            <div class="form-group">
-              <label for="creator">Created by:</label>
-              <input class="form-control" placeholder="Search for a specific username" id="creator" name="creator">
-            </div>
-            <div class="form-group">
-              <label for="created_from">Created after:</label>
-              <input type="date" class="form-control" placeholder="Search for a specific date" name="created_from">
-            </div>
-            <div class="form-group">
-              <label for="created_until">Created before:</label>
-              <input type="date" class="form-control" placeholder="Search for a specific date" name="created_until">
-            </div>
-            <div class="form-group">
-              <label for="modified_from">Modified after:</label>
-              <input type="date" class="form-control" placeholder="Search for a specific date" name="modified_from">
-            </div>
-            <div class="form-group">
-              <label for="modified_until">Modified before:</label>
-              <input type="date" class="form-control" placeholder="Search for a specific date" name="modified_until">
-            </div>
-            <button type="submit" class="btn btn-primary">Search</button>
-          </form>
+        <div class="form-group">
+          <label for="song_titles">Songs:</label>
+          <input class="form-control" placeholder="Search for words in the titles of songs" id="song_titles" name="song_titles">
+        </div>
+        <div class="form-group">
+          <label for="description">Playlist description:</label>
+          <input class="form-control" placeholder="Search for words in the descriptions" id="description" name="description">
+        </div>
+        <div class="form-group">
+          <label for="creator">Created by:</label>
+          <input class="form-control" placeholder="Search for a specific username" id="creator" name="creator">
+        </div>
+        <div class="form-group">
+          <label for="created_from">Created after:</label>
+          <input type="date" class="form-control" placeholder="Search for a specific date" name="created_from">
+        </div>
+        <div class="form-group">
+          <label for="created_until">Created before:</label>
+          <input type="date" class="form-control" placeholder="Search for a specific date" name="created_until">
+        </div>
+        <div class="form-group">
+          <label for="modified_from">Modified after:</label>
+          <input type="date" class="form-control" placeholder="Search for a specific date" name="modified_from">
+        </div>
+        <div class="form-group">
+          <label for="modified_until">Modified before:</label>
+          <input type="date" class="form-control" placeholder="Search for a specific date" name="modified_until">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
     </div>
   </body>
 

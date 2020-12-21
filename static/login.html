@@ -28,21 +28,21 @@
       </div>
     </nav>
     <div class="container" id=login_container>
-		<!-- Il faudrait afficher ce message d'erreur sans ruiner la mise en page:
+    <!-- Il faudrait afficher ce message d'erreur sans ruiner la mise en page:
     <p class="error_message" align="center">{{disconnectedErrorMessage}}</p>
-		-->
-			<div class="box">
+    -->
+      <div class="box">
         <h4><b>Log into your account</b></h4>
         <form action="login", method="post">
           <div class="form-group">
             <label for="loginUsername">USERNAME :</label>
             <input class="form-control" id="loginUsername" type="username" name="loginUsername" placeholder="Enter username" required>
-						<p class="error_message">{{usernameErrorMessage}}</p>
+            <p class="error_message">{{usernameErrorMessage}}</p>
           </div>
           <div class="form-group">
             <label for="loginPassword">PASSWORD :</label>
             <input class="form-control" id="loginPassword" type="password" name="loginPassword" placeholder="Enter password" required>
-						<p class="error_message">{{passwordErrorMessage}}</p>
+            <p class="error_message">{{passwordErrorMessage}}</p>
           </div>
           <button id='login'type="submit" class="btn btn-primary mx-auto d-block">Log in</button>
         </form>
@@ -54,7 +54,7 @@
           <div class="form-group">
             <label for="signUpUsername">USERNAME :</label>
             <input class="form-control" id="signUpUsername" type="username" name="signUpUsername" placeholder="Enter username" required>
-						<p class="error_message">{{signupErrorMessage}}</p>
+            <p class="error_message">{{signupErrorMessage}}</p>
           </div>
           <div class="form-group">
             <label for="signUpPassword">PASSWORD :</label>

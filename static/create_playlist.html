@@ -28,7 +28,7 @@
     </nav>
     <div class="container" id="createPlaylist">
       <h4>{{pageheader}}:</h4>
-		<a href="/delete_playlist?id={{_id}}" class="del-link link" color="tomato">{{deleteplaylist}}</a>
+      <a href="/delete_playlist?id={{_id}}" class="del-link link" color="tomato">{{deleteplaylist}}</a>
       <form action="createPlaylist" method="post">
         <label for="playlist_name">Playlist name:</label><br>
         <textarea class="one_line_text_area" name="playlist_name" required>{{title}}</textarea><br><br>
@@ -71,14 +71,18 @@
           <input type="checkbox" name="playlist_genres" value="other" {{other}}>
           <label for="techno">Other </label>
         </fieldset><br>
+
         <label for="playlist_add_genre">Additional genres:<br>
           <sm>Please use commas to separate genres if adding several.</sm>
         </label><br>
         <textarea class="long_text_area" name="playlist_add_genre">{{additional_genres}}</textarea><br><br>
+
         <label for="playlist_descr">Description: <sm>(optional)</sm></label><br>
         <textarea class="long_text_area" name="playlist_descr">{{description}}</textarea><br><br>
+
         <label for="playlist_color">Color: </label>
         <input type="color" name="playlist_color" value={{color}}>
+        
         <br><br><br>
         <div class="col text-center"><button type="submit" class="btn btn-primary" name="saveplaylist">{{saveplaylist}}</button></div>
       </form>
