@@ -328,6 +328,10 @@ label sm{
   display: flex;
 }
 
+#login_container p{
+  position: absolute;
+}
+
 #playlist_titles {
   height: 200px;
   width: 100%;
