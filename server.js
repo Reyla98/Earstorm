@@ -609,16 +609,11 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 				}
 			} else {
 				doc.forEach(function(item, index, array) {
-					if (req.body.created_after != '' | req.body.created_before != '' | req.body.modified_after != '' | req.body.modified_before != ''){
-						if (new Date(item.creation_date) < new Date(req.body.created_after)){
-							doc.splice(index,1);
-						} else if (new Date(item.creation_date) > new Date(req.body.created_before)){
-							doc.splice(index,1);
-						} else if (new Date(item.modification_date) < new Date(req.body.modified_after)){
-							doc.splice(index,1);
-						} else if (new Date(item.modification_date) > new Date(req.body.modified_before)){
-							doc.splice(index,1);
-						}
+					if ((req.body.created_from != '' && item.creation_date < new Date(req.body.created_from))
+						|| (req.body.created_until != '' && item.creation_date > new Date(req.body.created_until))
+						|| (req.body.modified_from != '' && item.modification_date < new Date(req.body.modified_from))
+						|| (req.body.modified_until != '' && item.modification_date > new Date(req.body.modified_until))){
+						doc.splice(index,1);
 					}
 				});
 				req.session.search = doc;

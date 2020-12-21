@@ -31,7 +31,7 @@
     </nav>
       <div class="container">
         <h4>Browse through genres:</h4>
-        <form action='/selectGenres' method=post>
+        <form action='/select_genres' method=post>
           <fieldset>
             <input type="checkbox" name="playlist_genres" value="alternative" {{alternative}}>
             <label for="alternative">Alternative </label>
@@ -68,7 +68,7 @@
           </fieldset>
           <button id='applySelection' type='submit' class="btn btn-primary">Apply selection</button>
         </form>
-        <form name=allGenres method=get action='/showAll'>
+        <form name=allGenres method=get action='/show_all'>
           <button class="btn btn-primary">Show all genres</button>
         </form>
       <table align="center" class="playlist_table">
