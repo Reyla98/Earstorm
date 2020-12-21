@@ -707,22 +707,21 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		res.redirect('/homepage');
 	});
 
-	if(process.argv.slice(2) == 'secured'){
-	https.createServer({
-		key: fs.readFileSync('./key.pem'),
-		cert: fs.readFileSync('./cert.pem'),
-		passphrase: 'ingi'
-	}, app).listen(port, function(){
-		console.log('Server running on port 8080')
-	});
-	}
-	else{
+	if(process.argv.slice(2) == 'http'){
 		http.createServer({
 		}, app).listen(port, function(){
 			console.log('Server running on port 8080')
 		});
 	}
-
+	else{
+		https.createServer({
+			key: fs.readFileSync('./key.pem'),
+			cert: fs.readFileSync('./cert.pem'),
+			passphrase: 'ingi'
+		}, app).listen(port, function(){
+			console.log('Server running on port 8080')
+		});
+	}
 	});
 
 function getFullDate(d) {
