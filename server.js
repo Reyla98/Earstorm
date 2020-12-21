@@ -559,10 +559,10 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 	})
 
 	app.post('/advanced_search', function(req, res) {
-		if ( req.body.description == ''
+		if (req.body.description == ''
 		&& req.body.playlist_title == ''
 		&& req.body.song_titles == ''
-		&& req.body.genre == ''
+		&& req.body.genres == ''
 		&& req.body.creator == ''){
 			dbo.collection('playlists').find({}).toArray(function(err, doc) {
 				if (err) throw err;
