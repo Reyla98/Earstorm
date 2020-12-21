@@ -102,7 +102,7 @@ describe('EarStorm Tests', function(){
         await driver.wait(until.urlContains("account"));
         let createPlaylistBtn = await driver.findElement(By.id('btnCreatePl'));
         await driver.executeScript("arguments[0].click();", createPlaylistBtn);
-        await driver.wait(until.urlContains("addPlaylist"));
+        await driver.wait(until.urlContains("add_playlist"));
         let playlistNameField = await driver.findElement(By.name("playlist_name"));
         let songsUrlField = await driver.findElement(By.name("playlist_songs"));
         let metalCheckBox = await driver.findElement(By.id("metal"));
@@ -131,9 +131,10 @@ describe('EarStorm Tests', function(){
         await expect(await driver.getCurrentUrl()).toBe(url+'account');
     });
     test('Playlist well added', async function(){
+        await driver.get(url+'account');
         var tbody = await driver.findElement(By.id('tbody'));
         var addedPlaylist = await tbody.getText();
-        addedPlaylist = addedPlaylist.split(" ");
+        addedPlaylist = await addedPlaylist.split(" ");
         let playlistName = addedPlaylist.slice(0,3).toString();
         let playlistDesciption = addedPlaylist.slice(3,10).toString();
         let creationDate = addedPlaylist.slice(10,13).toString();
@@ -162,6 +163,7 @@ describe('EarStorm Tests', function(){
         await searchField.click();
         await searchField.sendKeys(input);
         var searchBtn = await driver.findElement(By.id('searchBtn'));
+        await driver.sleep(1000);
         await searchBtn.click();
         var tbody = await driver.findElement(By.id('tbody'));
         playlists = await tbody.getText();
