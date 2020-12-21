@@ -408,7 +408,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			for (let url of urls){
 				if (url != ''){
 					let vid_info = getVideoInfo(url);
-					song_titles += vid_info;
+					song_titles += vid_info.vid_title;
 					song_titles += " ";
 					songs.push(vid_info);
 				}
