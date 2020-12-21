@@ -33,27 +33,27 @@
       <h4>{{user_creator}}'s playlists</h4>
       <table align="center" class="playlist_table">
         <thead>
-        <tr align="center">
-          <th width="5%"></th>
-          <th width="15%"><a class="sort-link link"  href="/sort_titles">{{heading_title}}</a></th>
-          <th width="24%"><a class="sort-link link"  href="/sort_description">{{heading_description}}</a></th>
-          <th width="18%"><a class="sort-link link"  href="/sort_created">{{heading_created}}</a></th>
-          <th width="18%"><a class="sort-link link"  href="/sort_modified">{{heading_modified}}</a></th>
-        </tr>
+          <tr align="center">
+            <th width="5%"></th>
+            <th width="15%"><a class="sort-link link"  href="/sort_titles">{{heading_title}}</a></th>
+            <th width="24%"><a class="sort-link link"  href="/sort_description">{{heading_description}}</a></th>
+            <th width="18%"><a class="sort-link link"  href="/sort_created">{{heading_created}}</a></th>
+            <th width="18%"><a class="sort-link link"  href="/sort_modified">{{heading_modified}}</a></th>
+          </tr>
         </thead>
         <tbody>
           {{#playlist_list}}
-          <tr>
-            <td>
-              <div class="color_box" style="background-color: {{color}}">
-                <img src="/img/logo_{{theme}}.png" alt="logo" width="32px" height="32px">
-              </div>
-            </td>
-            <td><a href="/playlist_content?id={{_id}}">{{title}}</a></td>
-            <td>{{description}}</td>
-            <td>{{creation_date}}</td>
-            <td>{{modification_date}}</td>
-          </tr>
+            <tr>
+              <td>
+                <div class="color_box" style="background-color: {{color}}">
+                  <img src="/img/logo_{{theme}}.png" alt="logo" width="32px" height="32px">
+                </div>
+              </td>
+              <td><a href="/playlist_content?id={{_id}}">{{title}}</a></td>
+              <td>{{description}}</td>
+              <td>{{creation_date}}</td>
+              <td>{{modification_date}}</td>
+            </tr>
           {{/playlist_list}}
         </tbody>
       </table>
