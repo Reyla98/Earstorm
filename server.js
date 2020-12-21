@@ -404,13 +404,11 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		if (req.session.playlist_id == null) {
 			console.log('Creating new playlist');
 			let songs = [];
-			let song_titles = "";
 			for (let url of urls){
 				if (url != ''){
 					let vid_info = getVideoInfo(url);
-					song_titles += vid_info.vid_title;
-					song_titles += " ";
 					songs.push(vid_info);
+					song_titles.push(vid_info.vid_title);
 				}
 			}
 			let playlist_info = {
@@ -450,10 +448,9 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 
 					}
 				}
-				let song_titles = "";
+				let song_titles = [];
 				for (let song of songs) {
-					song_titles += song.vid_title;
-					song_titles += " ";
+					song_titles.push(song.vid_title);
 				}
 				var playlist_info = {
 					title: title,
@@ -596,7 +593,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			if (req.body.description == ''){ req.body.description = ' '; }
 			if (req.body.playlist_title == ''){ req.body.playlist_title = ' '; }
 			if (req.body.song_titles == ''){req.body.song_titles = ' '; }
-			if (req.body.genres == ''){ req.body.genre = ' '; }
+			if (req.body.genres == ''){ req.body.genres = ' '; }
 			if (req.body.creator == ''){ req.body.creator = ' '; }
 			dbo.collection('playlists').aggregate([{$search:
 				{
