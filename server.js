@@ -28,7 +28,11 @@ app.use(bodyParser.text());
 
 MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net/Earstorm?retryWrites=true&w=majority', { useUnifiedTopology: true }, (err, db) => {
 	if (err) throw err;
-	var dbo = db.db('earstorm');
+	if(process.argv.includes('empty')){
+		var dbo = db.db('earstorm-empty');
+	} else {
+		var dbo = db.db('earstorm');
+	}
 	/* CLEAN DB > un-comment these lines and connect to server to remove users and playlists created in test.
 	dbo.collection('users').removeMany({email:'testEmail@test.com'});
 	dbo.collection('playlists').removeMany({title:'Playlist for JTest'});
@@ -404,6 +408,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		if (req.session.playlist_id == null) {
 			console.log('Creating new playlist');
 			let songs = [];
+			let song_titles = [];
 			for (let url of urls){
 				if (url != ''){
 					let vid_info = getVideoInfo(url);
@@ -737,7 +742,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 		res.redirect('/homepage');
 	});
 
-	if(process.argv.slice(2) == 'http'){
+	if(process.argv.includes('http')){
 		http.createServer({
 		}, app).listen(port, function(){
 			console.log('Server running on port 8080')
