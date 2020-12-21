@@ -70,7 +70,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			if (req.session.sorting == 'titles-1'){
 				req.session.search = req.session.search.reverse();
 			} else {
-				req.session.search = req.session.search.sort(function (a, b) {return a.title - b.title;});
+				req.session.search = req.session.search.sort(function (a, b) {return a.title.localeCompare(b.title);});
 			}
 			newDoc['playlist_list'] = getAllDates(req.session.search);
 			newDoc['heading_title'] = 'Title ˄';
@@ -154,7 +154,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			if (req.session.sorting == 'created-1'){
 				req.session.search = req.session.search.reverse();
 			} else {
-				req.session.search = req.session.search.sort(function (a, b) {return a.creation_date - b.creation_date;});
+				req.session.search = req.session.search.sort(function (a, b) {return new Date(a.creation_date) - new Date(b.creation_date);});
 			}
 			newDoc['playlist_list'] = getAllDates(req.session.search);
 			newDoc['heading_created'] = 'Created on ˄';
@@ -271,7 +271,12 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 			req.session.search = doc;
 			req.session.origin = 'account.html';
 			doc = getAllDates(doc);
-			let newDoc = {playlist_list:getAllDates(doc), username:req.session.username, heading_title:'Title', heading_description:'Description', heading_created:'Created on', heading_modified:'Last modified on'};
+			let newDoc = {playlist_list:getAllDates(doc),
+			              username:req.session.username,
+										heading_title:'Title',
+										heading_description:'Description',
+										heading_created:'Created on',
+										heading_modified:'Last modified on'};
 			if (req.session.accountMessage != null){
 				newDoc['accountMessage'] = req.session.accountMessage;
 				req.session.accountMessage = null;
