@@ -20,7 +20,7 @@ Pour cela ajoutez l'argument 'http' à la ligne de commande.
 
 NB:Les tests peuvent être réalisés sur la base de données vide comme celle contenant des exemples. L'argument empty est donc facultatif.
 
-Dans une seconde fenêtre d'invite de commande, accéder au répertoire 'Earstorm/__tests__'
+Dans une seconde fenêtre d'invite de commande, accéder au répertoire Earstorm/\__tests\__
 Ensuite, entrez la commande suivante pour lancer les tests:
 
     npm test
