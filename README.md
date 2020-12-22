@@ -1,6 +1,6 @@
 # Lancement du serveur
 
-Dans l'invite de commande accéder au répertoire du projet.
+Dans l'invite de commande accéder au répertoire principal du projet.
 Pour lancer le serveur avec une base de données contenant des exemples, entrez la commande:
 
     node server.js
@@ -19,6 +19,11 @@ Pour cela ajoutez l'argument 'http' à la ligne de commande.
     node server.js http empty
 
 NB:Les tests peuvent être réalisés sur la base de données vide comme celle contenant des exemples. L'argument empty est donc facultatif.
+
+Dans une seconde fenêtre d'invite de commande, accéder au répertoire Earstorm/__tests__
+Ensuite, entrez la commande suivante pour lancer les tests:
+
+    npm test
 
 
 # Supprimer les utilisateurs et les playlists de test
