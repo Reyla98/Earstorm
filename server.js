@@ -581,11 +581,15 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
     })
 
     app.post('/advanced_search', function(req, res) {
-        if (req.body.description == ''
-        && req.body.playlist_title == ''
-        && req.body.song_titles == ''
-        && req.body.genres == ''
-        && req.body.creator == '') {
+        // if the search is made only on dates, all documents are retrieved and filtered according to the date
+        if (
+            req.body.description == ''
+            && req.body.playlist_title == ''
+            && req.body.song_titles == ''
+            && req.body.genres == ''
+            && req.body.creator == ''
+        ) {
+
             dbo.collection('playlists').find({}).toArray(function(err, doc) {
                 if (err) throw err;
                 for (let playlist of doc) {
@@ -598,19 +602,36 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                 }
                 req.session.search = doc;
                 req.session.show_all = doc;
-                let new_doc = {playlist_list: getAllDates(doc),
-                              heading_title: 'Title',
-                              heading_description: 'Description',
-                              heading_creator: 'Creator',
-                              heading_created: 'Created on',
-                              heading_modified: 'Last modified on'};
-                if (req.session.username != null) {
-                    new_doc['username'] = req.session.username;
+                if (doc.length == 0) {
+                    req.session.search = doc;
+                    req.session.show_all = doc;
+                    if (req.session.username != null) {
+                        res.render('homepage.html', {
+                            username: req.session.username,
+                            noMatchErrorMessage: 'No match found'
+                        });
+                    } else {
+                        res.render('homepage.html', {
+                            login: 'Log in',
+                            noMatchErrorMessage: 'No match found'
+                        });
+                    }
                 } else {
-                    new_doc['login'] = 'Log in';
+                    let new_doc = {playlist_list: getAllDates(doc),
+                                  heading_title: 'Title',
+                                  heading_description: 'Description',
+                                  heading_creator: 'Creator',
+                                  heading_created: 'Created on',
+                                  heading_modified: 'Last modified on'};
+                    if (req.session.username != null) {
+                        new_doc['username'] = req.session.username;
+                    } else {
+                        new_doc['login'] = 'Log in';
+                    }
+                    res.render('homepage.html', new_doc);
                 }
-                res.render('homepage.html', new_doc);
             });
+        // if the search is not only made on the date, match is made on other elements and dates are filtered afterwards
         } else {
             if (req.body.description == '') { req.body.description = ' '; }
             if (req.body.playlist_title == '') { req.body.playlist_title = ' '; }
