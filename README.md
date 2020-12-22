@@ -16,7 +16,7 @@ Dans une première fenêtre d'invite de commande, lancez le serveur.
 Attention, les tests requièrent d'utiliser le protocole http.
 Pour cela ajoutez l'argument 'http' à la ligne de commande.
 
-		node server.js http empty
+    node server.js http empty
 
 NB:Les tests peuvent être réalisés sur la base de données vide comme celle contenant des exemples. L'argument empty est donc facultatif.
 
