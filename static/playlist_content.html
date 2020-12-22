@@ -43,15 +43,15 @@
         <thead>
           <tr align="center">
             <th width="5%"></th>
-            <th width="60%"><a class="sort-link link"  href="/sort_song_titles">{{heading_song_title}}</a></th>
-            <th width="20%"><a class="sort-link link"  href="/sort_added">{{heading_added}}</a></th>
+            <th width="60%"><a class="sort-link link"  href="/sort_song_titles">{{header_song_title}}</a></th>
+            <th width="20%"><a class="sort-link link"  href="/sort_added">{{header_added}}</a></th>
           </tr>
         </thead>
         <tbody>
           {{#song_list}}
             <tr>
               <td>
-                <button name="{{source}}"id="{{vid_id}}"class="btn btn-default mx-auto d-block">
+                <button name="{{source}}" id="{{vid_id}}" class="btn btn-default mx-auto d-block">
                   <a href="{{embedded_video}}" embed target="song_player" title="{{play_button}}">
                     <img src="../img/play-button.png" alt="play button" width="16px" height="16px" id="play-button">
                   </a>
