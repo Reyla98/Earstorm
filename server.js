@@ -12,6 +12,7 @@ const bcrypt = require('bcrypt');
 const getVideoId = require('get-video-id');
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 
+//Variables
 const port = 8080;
 const saltRounds = 10; //variable pour bcrypt
 
@@ -37,7 +38,13 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
     dbo.collection('users').removeMany({email:'testEmail@test.com'});
     dbo.collection('playlists').removeMany({title:'Playlist for JTest'});
     */
-
+		
+		var table_headers = {header_title:'Title',
+                        header_description:'Description',
+                        header_creator:'Creator',
+                        header_created:'Created on',
+                        header_modified:'Last modified on'};
+											 
     app.get('/', function(req, res) {
         res.render('welcome_page.html');
     });
@@ -49,12 +56,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
             req.session.search = doc;
             req.session.show_all = doc;
             req.session.origin = 'homepage.html';
-            let new_doc = {playlist_list: getAllDates(doc),
-                          heading_title: 'Title',
-                          heading_description: 'Description',
-                          heading_creator: 'Creator',
-                          heading_created: 'Created on',
-                          heading_modified: 'Last modified on'};
+            let new_doc = JSON.parse(JSON.stringify(table_headers));
+            new_doc['playlist_list'] = getAllDates(doc);
             if (req.session.username != null) {
                 new_doc['username'] = req.session.username;
             } else {
@@ -65,11 +68,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
     });
 
     app.get('/sort_titles', function(req, res) {
-        let new_doc = {heading_description: 'Description',
-                      heading_creator: 'Creator',
-                      heading_created: 'Created on',
-                      heading_modified: 'Last modified on',
-                      user_creator: req.session.creator};
+        let new_doc = JSON.parse(JSON.stringify(table_headers));
+        new_doc['user_creator'] = req.session.creator;
         if (req.session.sorting != 'titles1') {
             if (req.session.sorting == 'titles-1') {
                 req.session.search = req.session.search.reverse();
@@ -77,11 +77,11 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                 req.session.search = req.session.search.sort(function (a, b) {return a.title.localeCompare(b.title);});
             }
             new_doc['playlist_list'] = getAllDates(req.session.search);
-            new_doc['heading_title'] = 'Title ˄';
+            new_doc['header_title'] = 'Title ˄';
             req.session.sorting = 'titles1';
         } else {
             new_doc['playlist_list'] = getAllDates(req.session.search.reverse());
-            new_doc['heading_title'] = 'Title ˅';
+            new_doc['header_title'] = 'Title ˅';
             req.session.sorting = 'titles-1';
         }
         if (req.session.username != null) {
@@ -93,11 +93,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
     });
 
     app.get('/sort_description', function(req, res) {
-        let new_doc = {heading_title: 'Title',
-                      heading_creator: 'Creator',
-                      heading_created: 'Created on',
-                      heading_modified: 'Last modified on',
-                      user_creator: req.session.creator};
+        let new_doc = JSON.parse(JSON.stringify(table_headers));
+        new_doc['user_creator'] = req.session.creator;
         if (req.session.sorting != 'description1') {
             if (req.session.sorting == 'description-1') {
                 req.session.search = req.session.search.reverse();
@@ -105,11 +102,11 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                 req.session.search = req.session.search.sort(function (a, b) {return a.description.localeCompare(b.description);});
             }
             new_doc['playlist_list'] = getAllDates(req.session.search);
-            new_doc['heading_description'] = 'Description ˄';
+            new_doc['header_description'] = 'Description ˄';
             req.session.sorting = 'description1';
         } else {
             new_doc['playlist_list'] = getAllDates(req.session.search.reverse());
-            new_doc['heading_description'] = 'Description ˅';
+            new_doc['header_description'] = 'Description ˅';
             req.session.sorting = 'description-1';
         }
         if (req.session.username != null) {
@@ -121,11 +118,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
     });
 
     app.get('/sort_creator', function(req, res) {
-        let new_doc = {heading_title: 'Title',
-                      heading_description: 'Description',
-                      heading_created: 'Created on',
-                      heading_modified: 'Last modified on',
-                      user_creator: req.session.creator};
+        let new_doc = JSON.parse(JSON.stringify(table_headers));
         if (req.session.sorting != 'creator1') {
             if (req.session.sorting == 'creator-1') {
                 req.session.search = req.session.search.reverse();
@@ -133,11 +126,11 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                 req.session.search = req.session.search.sort(function (a, b) {return a.creator.localeCompare(b.creator);});
             }
             new_doc['playlist_list'] = getAllDates(req.session.search);
-            new_doc['heading_creator'] = 'Creator ˄';
+            new_doc['header_creator'] = 'Creator ˄';
             req.session.sorting = 'creator1';
         } else {
             new_doc['playlist_list'] = getAllDates(req.session.search.reverse());
-            new_doc['heading_creator'] = 'Creator ˅';
+            new_doc['header_creator'] = 'Creator ˅';
             req.session.sorting = 'creator-1';
         }
         if (req.session.username != null) {
@@ -145,15 +138,12 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
         } else {
             new_doc['login'] = 'Log in';
         }
-        res.render(req.session.origin, new_doc);
+        res.render('homepage.html', new_doc);
     });
 
     app.get('/sort_created', function(req, res) {
-        let new_doc = {heading_title: 'Title',
-                      heading_description: 'Description',
-                      heading_creator: 'Creator',
-                      heading_modified: 'Last modified on',
-                      user_creator: req.session.creator};
+        let new_doc = JSON.parse(JSON.stringify(table_headers));
+        new_doc['user_creator'] = req.session.creator;
         if (req.session.sorting != 'created1') {
             if (req.session.sorting == 'created-1') {
                 req.session.search = req.session.search.reverse();
@@ -161,11 +151,11 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                 req.session.search = req.session.search.sort(function (a, b) {return new Date(a.creation_date) - new Date(b.creation_date);});
             }
             new_doc['playlist_list'] = getAllDates(req.session.search);
-            new_doc['heading_created'] = 'Created on ˄';
+            new_doc['header_created'] = 'Created on ˄';
             req.session.sorting = 'created1';
         } else {
             new_doc['playlist_list'] = getAllDates(req.session.search.reverse());
-            new_doc['heading_created'] = 'Created on ˅';
+            new_doc['header_created'] = 'Created on ˅';
             req.session.sorting = 'created-1';
         }
         if (req.session.username != null) {
@@ -177,11 +167,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
     });
 
     app.get('/sort_modified', function(req, res) {
-        let new_doc = {heading_title: 'Title',
-                      heading_description: 'Description',
-                      heading_creator: 'Creator',
-                      heading_created: 'Created on',
-                      user_creator: req.session.creator};
+        let new_doc = JSON.parse(JSON.stringify(table_headers));
+        new_doc['user_creator'] = req.session.creator;
         if (req.session.sorting != 'modified1') {
             if (req.session.sorting == 'modified-1') {
                 req.session.search = req.session.search.reverse();
@@ -189,11 +176,11 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                 req.session.search = req.session.search.sort(function (a, b) {return new Date(a.modification_date) - new Date(b.modification_date);});
             }
             new_doc['playlist_list'] = getAllDates(req.session.search);
-            new_doc['heading_modified'] = 'Last modified on ˄';
+            new_doc['header_modified'] = 'Last modified on ˄';
             req.session.sorting = 'modified1';
         } else {
             new_doc['playlist_list'] = getAllDates(req.session.search.reverse());
-            new_doc['heading_modified'] = 'Last modified on ˅';
+            new_doc['header_modified'] = 'Last modified on ˅';
             req.session.sorting = 'modified-1';
         }
         if (req.session.username != null) {
@@ -207,7 +194,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
     app.get('/sort_song_titles', function(req, res) {
         let playlist = req.session.playlist;
         let songs = playlist.songs;
-        let new_doc = {heading_added: 'Added on',
+        let new_doc = {header_added: 'Added on',
                       title: playlist.title,
                       genres: playlist.genres.join(' / '),
                       description: playlist.description,
@@ -215,11 +202,11 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                       playlist_color: playlist.color,
                       theme: playlist.theme};
         if (req.session.sorting != 'songtitles1') {
-            new_doc['heading_songtitle'] = 'Title ˄';
+            new_doc['header_songtitle'] = 'Title ˄';
             req.session.sorting = 'songtitles1';
             songs = songs.sort((a, b)=>{return a.vid_title.localeCompare(b.vid_title);});
         } else {
-            new_doc['heading_songtitle'] = 'Title ˅';
+            new_doc['header_songtitle'] = 'Title ˅';
             req.session.sorting = 'songtitles-1';
             songs = songs.sort((a, b)=>{return b.vid_title.localeCompare(a.vid_title);});
         }
@@ -238,7 +225,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
     app.get('/sort_added', function(req, res) {
         let playlist = req.session.playlist;
         let songs = playlist.songs;
-        let new_doc = {heading_song_title: 'Title',
+        let new_doc = {header_song_title: 'Title',
                       title: playlist.title,
                       genres: playlist.genres.join(' / '),
                       description: playlist.description,
@@ -246,11 +233,11 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                       playlist_color: playlist.color,
                       theme: playlist.theme};
         if (req.session.sorting == 'song_added-1') {
-            new_doc['heading_added'] = 'Added on ˄';
+            new_doc['header_added'] = 'Added on ˄';
             req.session.sorting = 'song_added1';
             songs = songs.sort(function (a, b) {return new Date(a.date) - new Date(b.date);});
         } else {
-            new_doc['heading_added'] = 'Added on ˅';
+            new_doc['header_added'] = 'Added on ˅';
             req.session.sorting = 'song_added-1';
             songs = songs.sort(function (a, b) {return new Date(b.date) - new Date(a.date);});
         }
@@ -275,12 +262,9 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
             req.session.search = doc;
             req.session.origin = 'account.html';
             doc = getAllDates(doc);
-            let new_doc = {playlist_list: getAllDates(doc),
-                          username: req.session.username,
-                          heading_title: 'Title',
-                          heading_description: 'Description',
-                          heading_created: 'Created on',
-                          heading_modified: 'Last modified on'};
+						let new_doc = JSON.parse(JSON.stringify(table_headers));
+            new_doc['playlist_list'] = getAllDates(doc);
+            new_doc['username'] = req.session.username;
             if (req.session.accountMessage != null) {
                 new_doc['accountMessage'] = req.session.accountMessage;
                 req.session.accountMessage = null;
@@ -492,8 +476,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
             for (let song of doc.songs) {
                 song.date = getFullDate(song.date);
             }
-            let new_doc = {heading_song_title: 'Title',
-                          heading_added: 'Added on',
+            let new_doc = {header_song_title: 'Title',
+                          header_added: 'Added on',
                           song_list: doc.songs,
                           title: doc.title,
                           genres: doc.genres.join(' / '),
@@ -559,12 +543,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 							});
                     }
                 } else {
-                    let new_doc = {playlist_list: getAllDates(doc),
-                                  heading_title: 'Title',
-                                  heading_description: 'Description',
-                                  heading_creator: 'Creator',
-                                  heading_created: 'Created on',
-                                  heading_modified: 'Last modified on'};
+                    let new_doc = JSON.parse(JSON.stringify(table_headers));
+                    new_doc['playlist_list'] = getAllDates(doc);
                     if (req.session.username != null) {
                         new_doc['username'] = req.session.username;
                     } else {
@@ -617,12 +597,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                         });
                     }
                 } else {
-                    let new_doc = {playlist_list: getAllDates(doc),
-                                  heading_title: 'Title',
-                                  heading_description: 'Description',
-                                  heading_creator: 'Creator',
-                                  heading_created: 'Created on',
-                                  heading_modified: 'Last modified on'};
+                    let new_doc = JSON.parse(JSON.stringify(table_headers));
+                    new_doc['playlist_list'] = getAllDates(doc);;
                     if (req.session.username != null) {
                         new_doc['username'] = req.session.username;
                     } else {
@@ -701,12 +677,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
                     }
                     req.session.search = doc;
                     req.session.show_all = doc;
-                    let new_doc = {playlist_list: getAllDates(doc),
-                                  heading_title: 'Title',
-                                  heading_description: 'Description',
-                                  heading_creator: 'Creator',
-                                  heading_created: 'Created on',
-                                  heading_modified: 'Last modified on'};
+                    let new_doc = JSON.parse(JSON.stringify(table_headers));
+                    new_doc['playlist_list'] = getAllDates(doc);
                     if (req.session.username != null) {
                         new_doc['username'] = req.session.username;
                     } else {
@@ -724,12 +696,9 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
             if (err) throw err;
             req.session.search = doc;
             req.session.origin = 'user_playlists.html';
-            let new_doc = {playlist_list: getAllDates(doc),
-                          heading_title: 'Title',
-                          heading_description: 'Description',
-                          user_creator: req.session.creator,
-                          heading_created: 'Created on',
-                          heading_modified: 'Last modified on'};
+            let new_doc = JSON.parse(JSON.stringify(table_headers));
+            new_doc['playlist_list'] = getAllDates(doc);
+            new_doc['user_creator'] = req.session.creator;
             if (req.session.username != null) {
                 new_doc['username'] = req.session.username;
             } else {
@@ -740,11 +709,7 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
     });
 
     app.post('/select_genres', function(req, res) {
-        let new_doc = {heading_title: 'Title',
-                      heading_description: 'Description',
-                      heading_creator: 'Creator',
-                      heading_created: 'Created on',
-                      heading_modified: 'Last modified on'};
+        let new_doc = JSON.parse(JSON.stringify(table_headers));
         req.session.search = req.session.show_all;
         let selected_genres = [];
         if (Array.isArray(req.body.playlist_genres)) {
@@ -767,12 +732,8 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
 
     app.get('/show_all', function(req, res) {
         req.session.search = req.session.show_all;
-        let new_doc = {playlist_list: req.session.show_all,
-                      heading_title: 'Title',
-                      heading_description: 'Description',
-                      heading_creator: 'Creator',
-                      heading_created: 'Created on',
-                      heading_modified: 'Last modified on'};
+        let new_doc = JSON.parse(JSON.stringify(table_headers));
+        new_doc['playlist_list'] = req.session.show_all;
         if (req.session.username != null) {
             new_doc['username'] = req.session.username;
         } else {
