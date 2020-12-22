@@ -24,7 +24,7 @@ NB:Les tests peuvent être réalisés sur la base de données vide comme celle c
 # Supprimer les utilisateurs et les playlists de test
 
 Les tests créent des utilisateurs et des playlists qui peuvent encombrer notre base de données.
-Pour supprimer ces données indésirables, il faut sortir des commentaires les lignes 38 et 39 du fichier server.js et lancer le serveur avec la base de données désirée.
+Pour supprimer ces données indésirables, il faut sortir des commentaires les lignes 39 et 40 du fichier server.js et lancer le serveur avec la base de données désirée.
 
 
 # Remarques diverses
