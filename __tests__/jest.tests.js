@@ -148,15 +148,15 @@ describe('EarStorm Tests', function(){
         await driver.get(url+"homepage");
         await driver.wait(until.urlContains("homepage"));
         var searchField = await driver.findElement(By.name("search_words"));
-        var input = ['favourite','music'];
+        var input = ['description'];
         await searchField.clear();
         await searchField.click();
-        await searchField.sendKeys(input[0]+' '+input[1]);
+        await searchField.sendKeys(input[0]);
         var searchBtn = await driver.findElement(By.id('searchBtn'));
         await searchBtn.click();
         var tbody = await driver.findElement(By.id('tbody'));
         var playlists = await tbody.getText();
-        expect(playlists).toContain(input[0]||input[1]);
+        expect(playlists).toContain(input[0]);
         input = "ugszidjzidgugfzzdhfzfz";
         var searchField = await driver.findElement(By.name("search_words"));
         await searchField.clear();

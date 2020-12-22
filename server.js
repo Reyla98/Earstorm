@@ -22,6 +22,7 @@ app.use(session({secret: 'earstorm123', resave: true, saveUninitialized: false})
 app.engine('html', consolidate.hogan);
 app.set('views', 'static');
 app.use(express.static('static'));
+app.use(express.static('modules'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(bodyParser.text());
@@ -38,13 +39,13 @@ MongoClient.connect('mongodb+srv://groupD:group-5678D@earstorm.twelv.mongodb.net
     dbo.collection('users').removeMany({email:'testEmail@test.com'});
     dbo.collection('playlists').removeMany({title:'Playlist for JTest'});
     */
-		
+
 		var table_headers = {header_title:'Title',
                         header_description:'Description',
                         header_creator:'Creator',
                         header_created:'Created on',
                         header_modified:'Last modified on'};
-											 
+
     app.get('/', function(req, res) {
         res.render('welcome_page.html');
     });
